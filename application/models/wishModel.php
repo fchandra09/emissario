@@ -139,6 +139,17 @@ class WishModel extends Model
 			$sql .= " AND Wish.User_ID = :user_id";
 		}
 
+		if (strcasecmp("Accepted", $status) == 0)
+		{
+			/* Only open wish can be accepted */
+			$sql .= " AND Wish.Status = 'Open'";
+		}
+		elseif (strcasecmp("Closed", $status) == 0)
+		{
+			/* Only accepted wish can be closed */
+			$sql .= " AND Wish.Status = 'Accepted'";
+		}
+
 		$parameters = array(
 				":wish_id" => $wishID,
 				":status" => $status,
