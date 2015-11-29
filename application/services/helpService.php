@@ -18,4 +18,16 @@ class HelpService extends Service
 		return $this->model->getHelp($helpID, $userID);
 	}
 
+	public function getPotentialHelpers($wishID, $userID)
+	{
+		return $this->model->getPotentialHelpers($wishID, $userID);
+	}
+
+	public function insertHelpRequests()
+	{
+		foreach (explode(",", $_POST["helperIDs"]) as $helperID) {
+			$this->model->insertHelpRequest($helperID);
+		}
+	}
+
 }

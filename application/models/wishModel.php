@@ -160,4 +160,5 @@ class WishModel extends Model
 
 		$GLOBALS["beans"]->queryHelper->executeWriteQuery($this->db, $sql, $parameters);
 	}
+
 }

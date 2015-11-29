@@ -60,6 +60,13 @@
 
 	<div class="section">
 		<h3 class="page-header">Helps</h3>
+
+		<?php if (strcasecmp("Open", $wish->Status) == 0) { ?>
+			<div class="clearfix table-action">
+				<button type="button" id="request" class="btn btn-default">Request for Help</button>
+			</div>
+		<?php } ?>
+
 		<div class="table-responsive">
 			<table class="table table-striped">
 				<thead>
@@ -155,6 +162,10 @@
 				{
 					window.location.href = '<?php echo URL_WITH_INDEX_FILE . "wishes/delete/" . $wishID; ?>';
 				}
+			});
+
+			$('#request').click(function(){
+				window.location.href = '<?php echo URL_WITH_INDEX_FILE . "wishes/request/" . $wishID; ?>';
 			});
 
 		<?php } elseif (strcasecmp("Accepted", $wish->Status) == 0) { ?>

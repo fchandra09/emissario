@@ -129,4 +129,85 @@ class HelpModel extends Model
 		return $GLOBALS["beans"]->queryHelper->getSingleRowObject($this->db, $sql, $parameters);
 	}
 
+	public function getPotentialHelpers($wishID, $userID)
+	{
+		$sql = "SELECT User.ID,
+					User.First_Name,
+					User.Last_Name,
+					User.City,
+					State.State_Name,
+					Country.Country_Name,
+					Travel.Destination_City,
+					DATE_FORMAT(Travel.Travel_Date, '%m/%d/%Y') AS Formatted_Travel_Date,
+					Dest_Country.Country_Name AS Destination_Country_Name,
+					CASE WHEN Friend_Summary.Status IS NULL THEN '4 - non_friends' ELSE Friend_Summary.Status END AS Friend_Status,
+					CASE WHEN Review_Summary.Review_Count > 0 THEN ROUND(Review_Summary.Recommended_Count * 100 / Review_Summary.Review_Count) ELSE 0 END AS Recommendation_Score
+				FROM User
+				INNER JOIN User Me ON Me.ID = :user_id AND Me.ID <> User.ID
+				INNER JOIN Wish ON Wish.ID = :wish_id
+				LEFT JOIN State ON State.State_Code = User.State AND State.Country_Code = User.Country
+				LEFT JOIN Country ON Country.Country_Code = User.Country
+				LEFT JOIN Travel ON Travel.ID = (SELECT T.ID
+												FROM Travel T
+												WHERE T.User_ID = User.ID
+													AND T.Travel_Date > DATE(NOW())
+												ORDER BY CASE WHEN T.Destination_Country = Wish.Destination_Country THEN 1 ELSE 2 END,
+													CASE WHEN LOWER(T.Destination_City) = LOWER(Wish.Destination_City) THEN 1 ELSE 2 END,
+													Travel_Date
+												LIMIT 1)
+				LEFT JOIN Country Dest_Country ON Dest_Country.Country_Code = Travel.Destination_Country
+				LEFT JOIN (
+					SELECT User_ID2 AS Friend_ID, CASE WHEN Pending = 1 THEN '2 - pending_friend' ELSE '1 - friends' END AS Status
+					FROM Friend
+					WHERE User_ID1 = :user_id
+					UNION
+					SELECT User_ID1 AS Friend_ID, CASE WHEN Pending = 1 THEN '3 - pending_mine' ELSE '1 - friends' END AS Status
+					FROM Friend
+					WHERE User_ID2 = :user_id
+				) Friend_Summary ON Friend_Summary.Friend_ID = User.ID
+				LEFT JOIN (
+					SELECT User_ID, SUM(CASE WHEN Recommended = 1 THEN 1 ELSE 0 END) AS Recommended_Count, COUNT(*) AS Review_Count
+					FROM Review
+					GROUP BY User_ID
+				) Review_Summary ON Review_Summary.User_ID = User.ID
+				WHERE NOT EXISTS (
+					SELECT Help.ID
+					FROM Help
+					WHERE Help.User_ID = user.ID
+						AND Help.Wish_ID = Wish.ID
+				)
+				ORDER BY CASE WHEN Travel.Destination_Country = Wish.Destination_Country THEN 1 ELSE 2 END,
+					CASE WHEN LOWER(Travel.Destination_City) = LOWER(Wish.Destination_City) THEN 1 ELSE 2 END,
+					Friend_Status,
+					CASE WHEN Me.Country = User.Country THEN 1 ELSE 2 END,
+					CASE WHEN Me.State = User.State THEN 1 ELSE 2 END,
+					CASE WHEN LOWER(Me.City) = LOWER(User.City) THEN 1 ELSE 2 END,
+					Recommendation_Score DESC,
+					Travel.Travel_Date
+				LIMIT 50";
+
+		$parameters = array(
+				":wish_id" => $wishID,
+				":user_id" => $userID
+		);
+
+		$query = $this->db->prepare($sql);
+		$query->execute($parameters);
+
+		return $query->fetchAll();
+	}
+
+	public function insertHelpRequest($helperID) {
+		$sql = "INSERT INTO Help (Wish_ID, User_ID, Requested, Offered, Created_By, Created_On, Modified_On)
+				VALUES (:wish_id, :helper_id, 1, 0, :user_id, NOW(), NOW())";
+
+		$parameters = array(
+				":wish_id" => $_POST["wishID"],
+				":helper_id" => $helperID,
+				":user_id" => $GLOBALS["beans"]->siteHelper->getSession("userID")
+		);
+
+		return $GLOBALS["beans"]->queryHelper->executeWriteQuery($this->db, $sql, $parameters);
+	}
+
 }

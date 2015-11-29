@@ -72,4 +72,36 @@ class Wishes
 		header('location: ' . URL_WITH_INDEX_FILE . 'wishes/view/' . $wishID);
 	}
 
+	public function request($wishID)
+	{
+		$userID = $GLOBALS["beans"]->siteHelper->getSession("userID");
+		$wish = $GLOBALS["beans"]->wishService->getWish($wishID, $userID, "Open");
+
+		if ($wish->ID != "")
+		{
+			$potentialHelpers = $GLOBALS["beans"]->helpService->getPotentialHelpers($wish->ID, $userID);
+			$valid = true;
+		}
+		else {
+			$valid = false;
+		}
+
+		require APP . 'views/_templates/header.php';
+		require APP . 'views/wishes/request.php';
+		require APP . 'views/_templates/footer.php';
+	}
+
+	public function saveHelpRequests()
+	{
+		$userID = $GLOBALS["beans"]->siteHelper->getSession("userID");
+		$wish = $GLOBALS["beans"]->wishService->getWish($_POST["wishID"], $userID, "Open");
+
+		/* Ensure the wish is valid for creating help requests */
+		if ($wish->ID != "") {
+			$GLOBALS["beans"]->helpService->insertHelpRequests();
+		}
+
+		header('location: ' . URL_WITH_INDEX_FILE . 'wishes/view/' . $_POST["wishID"]);
+	}
+
 }
