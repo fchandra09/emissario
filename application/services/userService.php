@@ -17,9 +17,30 @@ class UserService extends Service
 	{
 		$this->model->insertUser();
 	}
-	public function sendemail()
+
+	public function sendForgetEmail()
 	{
-		return $this->model->sendemail($email);
+		$errorMessage = "Email is not registered.";
+		$loginInfo = $this->model->getLoginInfo($_POST["email"]);
+
+		if (is_numeric($loginInfo->ID))
+		{
+			$key = $GLOBALS["beans"]->resourceService->getRandomUID();
+			$this->model->insertPasswordReset($key);
+
+			$message = "Hi " . $loginInfo->First_Name . ",\r\n\r\n";
+			$message .= "Please use the following link to reset your password:\r\n";
+			$message .= URL_WITH_INDEX_FILE . "user/reset/" . $key . "\r\n\r\n";
+			$message .= "This link is valid for 30 minutes.\r\n\r\n";
+			$message .= "Thank you,\r\n";
+			$message .= "The team at Emissario";
+
+			mail($loginInfo->Email, "Emissario Password Reset", $message, "From: fchandr2@illinois.edu");
+
+			$errorMessage = "";
+		}
+
+		return $errorMessage;
 	}
 
 	public function updateLogin()

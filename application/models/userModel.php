@@ -63,11 +63,6 @@ class UserModel extends Model
 		$GLOBALS["beans"]->queryHelper->executeWriteQuery($this->db, $sql, $parameters);
 	}
 
-	public function sendemail(){
-		$sql= "SELECT User.password
-				FROM User
-				WHERE User.ID= :user_email";
-	}
 	public function updateProfile() {
 		$sql = "UPDATE User
 				SET First_Name = :first_name,
@@ -94,13 +89,25 @@ class UserModel extends Model
 
 	public function getLoginInfo($email)
 	{
-		$sql = "SELECT ID, Email, Password
+		$sql = "SELECT ID, Email, Password, First_Name
 				FROM User
 				WHERE Email = :email";
 
 		$parameters = array(":email" => $email);
 
 		return $GLOBALS["beans"]->queryHelper->getSingleRowObject($this->db, $sql, $parameters);
+	}
+
+	public function insertPasswordReset($resetKey) {
+		$sql = "INSERT INTO Password_Reset (Email, Reset_Key, Used, Created_On, Modified_On)
+				VALUES (:email, :reset_key, 0, NOW(), NOW())";
+
+		$parameters = array(
+				":email" => $_POST["email"],
+				":reset_key" => password_hash($resetKey,PASSWORD_DEFAULT)
+		);
+
+		return $GLOBALS["beans"]->queryHelper->executeWriteQuery($this->db, $sql, $parameters);
 	}
 
 }

@@ -30,4 +30,14 @@ class ResourceModel extends Model
 		return $query->fetchAll();
 	}
 
+	public function getRandomUID()
+	{
+		$sql = "SELECT REPLACE(UUID(), '-', '') AS Random_UID";
+
+		$query = $this->db->prepare($sql);
+		$query->execute();
+
+		return $query->fetch()->Random_UID;
+	}
+
 }

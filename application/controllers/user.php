@@ -22,6 +22,13 @@ class User
 		require APP . 'views/_templates/footer.php';
 	}
 
+	public function forget()
+	{
+		require APP . 'views/_templates/header.php';
+		require APP . 'views/user/forget.php';
+		require APP . 'views/_templates/footer.php';
+	}
+
 	public function reset()
 	{
 		require APP . 'views/_templates/header.php';
@@ -29,11 +36,20 @@ class User
 		require APP . 'views/_templates/footer.php';
 	}
 
-	public function sendemail()
+	public function sendForgetEmail()
 	{
-		$errorMessage = $GLOBALS["beans"]->userService->sendemail();
+		$errorMessage = $GLOBALS["beans"]->userService->sendForgetEmail();
 
-		header('location: ' . URL_WITH_INDEX_FILE);
+		if ($errorMessage != "")
+		{
+			$GLOBALS["beans"]->siteHelper->setAlert("danger", $errorMessage);
+			header('location: ' . URL_WITH_INDEX_FILE . 'user/forget');
+		}
+		else
+		{
+			$_SESSION["forgetEmailSent"] = 1;
+			header('location: ' . URL_WITH_INDEX_FILE);
+		}
 	}
 
 	public function editLogin()

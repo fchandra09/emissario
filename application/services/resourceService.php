@@ -13,4 +13,9 @@ class ResourceService extends Service
 		return $this->model->getStates($countryCode, $fieldList);
 	}
 
+	public function getRandomUID()
+	{
+		return $this->model->getRandomUID();
+	}
+
 }

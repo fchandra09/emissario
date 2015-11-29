@@ -26,6 +26,15 @@
 	}
 </style>
 
+<?php if ($GLOBALS["beans"]->siteHelper->getSession("forgetEmailSent") != "") {
+	$_SESSION["forgetEmailSent"] = ""; ?>
+	<div class="container">
+		<div class="alert alert-info" role="alert">
+			Please check your email for the instruction to reset your password.
+		</div>
+	</div>
+<?php } ?>
+
 <div id="loginContainer" class="container">
 	<div id="loginPanel" class="panel panel-default">
 		<div class="panel-heading">
@@ -58,7 +67,7 @@
 			<table>
 				<tr>
 					<td class="text-center">
-						<a href="<?php echo URL_WITH_INDEX_FILE; ?>user/reset">Forget Password</a>
+						<a href="<?php echo URL_WITH_INDEX_FILE; ?>user/forget">Forget Password</a>
 					</td>
 					<td class="text-center">
 						<a href="<?php echo URL_WITH_INDEX_FILE; ?>user/signUp">Create an Account</a>
