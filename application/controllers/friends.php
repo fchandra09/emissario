@@ -25,6 +25,15 @@ class Friends
 
 		$friends = $GLOBALS["beans"]->friendService->getFriends($userID, $friendType, $search);
 
+		if (strcasecmp("pending_mine", $friendType) == 0)
+		{
+			$pendingMineCount = count($friends);
+		}
+		else
+		{
+			$pendingMineCount = count($GLOBALS["beans"]->friendService->getFriends($userID, "pending_mine"));
+		}
+
 		require APP . 'views/_templates/header.php';
 		require APP . 'views/friends/index.php';
 		require APP . 'views/_templates/footer.php';

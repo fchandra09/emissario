@@ -1,6 +1,27 @@
-<?php if (!$this) { exit(header('HTTP/1.0 403 Forbidden')); } ?>
+<?php if (!$this) { exit(header('HTTP/1.0 403 Forbidden')); }
+
+if ($pendingMineCount == 1) {
+	$alertMessage = "You have 1 friend request from another user.";
+	$alertMessage2 = "this request";
+}
+else if ($pendingMineCount > 1) {
+	$alertMessage = "You have " . $pendingMineCount . " friend requests from other users.";
+	$alertMessage2 = "these requests";
+}
+else {
+	$alertMessage = "";
+}
+?>
 
 <div class="container">
+
+	<?php if ($alertMessage != "") { ?>
+		<div class="alert alert-info" role="alert">
+			<?php echo $alertMessage; ?>
+			Change the Type filter to "Pending My Approval" to view <?php echo $alertMessage2; ?>.
+		</div>
+	<?php } ?>
+
 	<h2 class="page-header">Friends</h2>
 
 	<div class="clearfix table-action">
