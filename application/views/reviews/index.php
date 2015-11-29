@@ -42,6 +42,7 @@ else
 			<thead>
 				<tr>
 					<th width="1%">&nbsp;</th>
+					<th>Review Date</th>
 					<th>
 						<?php if (strcasecmp("written", $reviewType) == 0) {
 							echo "User";
@@ -68,6 +69,7 @@ else
 								</span>
 							<?php } ?>
 						</td>
+						<td><?php echo $review->Formatted_Created_On; ?></td>
 						<td>
 							<?php if (strcasecmp("written", $reviewType) == 0) {
 								echo $review->User_First_Name . " " . $review->User_Last_Name;
@@ -84,7 +86,7 @@ else
 								echo "No";
 							} ?>
 						</td>
-						<td><?php echo $review->Comments ?></td>
+						<td><?php echo $review->Comments; ?></td>
 					</tr>
 				<?php } ?>
 			</tbody>

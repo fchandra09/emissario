@@ -6,6 +6,7 @@ class ReviewModel extends Model
 	public function getReviews($userID, $reviewType, $recommended = "")
 	{
 		$sql = "SELECT Review.*,
+					DATE_FORMAT(Review.Created_On, '%m/%d/%Y %h:%i %p') AS Formatted_Created_On,
 					Help.Wish_ID,
 					User.First_Name AS User_First_Name,
 					User.Last_Name AS User_Last_Name,
