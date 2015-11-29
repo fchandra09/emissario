@@ -79,6 +79,7 @@ else
 	<h2 class="page-header">New Message</h2>
 	<form id="form" method="post" action="<?php echo URL_WITH_INDEX_FILE; ?>messages/save" class="form-horizontal">
 		<input type="hidden" id="userID" name="userID" value="<?php echo $userID; ?>" />
+		<input type="hidden" id="wishID" name="wishID" value="<?php echo $wishID; ?>" />
 
 		<div class="form-group">
 			<label for="recipientID" class="col-sm-2 control-label">Recipient</label>
@@ -105,7 +106,6 @@ else
 							<?php echo $wishDescription; ?>
 						</a>
 					</p>
-					<input type="hidden" id="wishID" name="wishID" value="<?php echo $wishID; ?>" />
 				</div>
 			</div>
 		<?php } ?>
