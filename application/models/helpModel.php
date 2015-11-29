@@ -176,7 +176,7 @@ class HelpModel extends Model
 				WHERE NOT EXISTS (
 					SELECT Help.ID
 					FROM Help
-					WHERE Help.User_ID = user.ID
+					WHERE Help.User_ID = User.ID
 						AND Help.Wish_ID = Wish.ID
 				)
 				ORDER BY CASE WHEN Travel.Destination_Country = Wish.Destination_Country THEN 1 ELSE 2 END,
