@@ -46,7 +46,10 @@ class HelpModel extends Model
 				INNER JOIN Wish ON Wish.ID = Help.Wish_ID
 				INNER JOIN User Owner ON Owner.ID = Wish.User_ID
 				LEFT JOIN Country ON Country.Country_Code = Wish.Destination_Country
-				WHERE Help.User_ID = :user_id";
+				WHERE Help.User_ID = :user_id
+					AND (Wish.Status = 'Open'
+						OR (Help.Requested = 1
+							AND Help.Offered = 1))";
 
 		if (strcasecmp($wishStatus, "closed") == 0)
 		{
