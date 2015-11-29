@@ -36,11 +36,9 @@ $wishDestination .= $wish->Destination_Country_Name;
 						<tr>
 							<th width="1%">&nbsp;</th>
 							<th>Name</th>
-							<th>City</th>
-							<th>State</th>
-							<th>Country</th>
+							<th>Location</th>
 							<th>Friends</th>
-							<th>Recommendation Score</th>
+							<th>Recommended</th>
 							<th>Travel Plan</th>
 						</tr>
 					</thead>
@@ -52,9 +50,22 @@ $wishDestination .= $wish->Destination_Country_Name;
 										<input type="checkbox" class="helper-checkbox" value="<?php echo $helper->ID; ?>" />
 									</td>
 									<td><?php echo $helper->First_Name . " " . $helper->Last_Name ; ?></td>
-									<td><?php echo $helper->City; ?></td>
-									<td><?php echo $helper->State_Name; ?></td>
-									<td><?php echo $helper->Country_Name; ?></td>
+									<td>
+										<?php $location = $helper->City;
+										if (strcasecmp("United States", $helper->Country_Name) == 0) {
+											if ($helper->State_Name != "" && $location != "") {
+												$location .= ", ";
+											}
+											$location .= $helper->State_Name;
+										}
+										else {
+											if ($helper->Country_Name != "" && $location != "") {
+												$location .= ", ";
+											}
+											$location .= $helper->Country_Name;
+										}
+										echo $location; ?>
+									</td>
 									<td>
 										<?php $friendStatusNumber = $GLOBALS["beans"]->stringHelper->left($helper->Friend_Status, 1);
 										if ($friendStatusNumber == "1") {
