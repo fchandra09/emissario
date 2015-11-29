@@ -5,7 +5,9 @@ class FriendModel extends Model
 
 	public function getFriends($userID, $friendType, $search = "")
 	{
-		$sql = "SELECT User.ID, User.First_Name, User.Last_Name, User.City, User.State, User.Country, F.Pending
+		$sql = "SELECT User.ID, User.First_Name, User.Last_Name, User.City, User.State, User.Country, F.Pending,
+					State.State_Name,
+					Country.Country_Name
 				FROM (";
 
 		if (strcasecmp($friendType, "pending_mine") == 0)
@@ -36,7 +38,9 @@ class FriendModel extends Model
 		}
 
 		$sql .= " ) F
-				INNER JOIN User ON User.ID = F.Friend_ID";
+				INNER JOIN User ON User.ID = F.Friend_ID
+				LEFT JOIN State ON State.State_Code = User.State AND State.Country_Code = User.Country
+				LEFT JOIN Country ON Country.Country_Code = User.Country";
 
 		if (trim($search) != "")
 		{
@@ -61,7 +65,9 @@ class FriendModel extends Model
 
 	public function getFriend($friendID, $userID = "")
 	{
-		$sql = "SELECT User.ID, User.First_Name, User.Last_Name, User.City, User.State, User.Country, User.Email
+		$sql = "SELECT User.ID, User.First_Name, User.Last_Name, User.City, User.State, User.Country, User.Email,
+					State.State_Name,
+					Country.Country_Name
 				FROM User";
 
 		if (is_numeric($userID))
@@ -79,7 +85,9 @@ class FriendModel extends Model
 				) F ON F.Friend_ID = User.ID";
 		}
 
-		$sql .= " WHERE User.ID = :friend_id";
+		$sql .= " LEFT JOIN State ON State.State_Code = User.State AND State.Country_Code = User.Country
+				LEFT JOIN Country ON Country.Country_Code = User.Country
+				WHERE User.ID = :friend_id";
 
 		$parameters = array(':friend_id' => $friendID);
 		if (is_numeric($userID))
@@ -108,8 +116,12 @@ class FriendModel extends Model
 
 	public function searchPotentialFriends($search, $userID)
 	{
-		$sql = "SELECT User.ID, User.First_Name, User.Last_Name, User.City, User.State, User.Country
+		$sql = "SELECT User.ID, User.First_Name, User.Last_Name, User.City, User.State, User.Country,
+					State.State_Name,
+					Country.Country_Name
 				FROM User
+				LEFT JOIN State ON State.State_Code = User.State AND State.Country_Code = User.Country
+				LEFT JOIN Country ON Country.Country_Code = User.Country
 				WHERE User.ID <> :user_id
 					AND (CONCAT(First_Name, ' ', Last_Name) LIKE CONCAT('%', :search, '%')
 						OR Email = :search)

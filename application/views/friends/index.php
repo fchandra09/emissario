@@ -68,8 +68,8 @@
 						</td>
 						<td><?php echo $friend->Last_Name ?></td>
 						<td><?php echo $friend->City ?></td>
-						<td><?php echo $friend->State ?></td>
-						<td><?php echo $friend->Country ?></td>
+						<td><?php echo $friend->State_Name ?></td>
+						<td><?php echo $friend->Country_Name ?></td>
 					</tr>
 				<?php } ?>
 			</tbody>

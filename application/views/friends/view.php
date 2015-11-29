@@ -24,13 +24,13 @@
 		<div class="form-group">
 			<label class="col-sm-2 control-label">State</label>
 			<div class="col-sm-10">
-				<p class="form-control-static"><?php echo $friend->State ?></p>
+				<p class="form-control-static"><?php echo $friend->State_Name ?></p>
 			</div>
 		</div>
 		<div class="form-group">
 			<label class="col-sm-2 control-label">Country</label>
 			<div class="col-sm-10">
-				<p class="form-control-static"><?php echo $friend->Country ?></p>
+				<p class="form-control-static"><?php echo $friend->Country_Name ?></p>
 			</div>
 		</div>
 		<div class="form-group">

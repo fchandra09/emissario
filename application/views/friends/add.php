@@ -145,8 +145,8 @@
 					tr.append('<td>' + potentialFriends[i].First_Name + '</td>');
 					tr.append('<td>' + potentialFriends[i].Last_Name + '</td>');
 					tr.append('<td>' + getValueForDisplay(potentialFriends[i].City) + '</td>');
-					tr.append('<td>' + getValueForDisplay(potentialFriends[i].State) + '</td>');
-					tr.append('<td>' + getValueForDisplay(potentialFriends[i].Country) + '</td>');
+					tr.append('<td>' + getValueForDisplay(potentialFriends[i].State_Name) + '</td>');
+					tr.append('<td>' + getValueForDisplay(potentialFriends[i].Country_Name) + '</td>');
 
 					$('#searchResults').find('tbody').append(tr);
 				}
