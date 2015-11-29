@@ -139,7 +139,7 @@ class FriendModel extends Model
 	}
 
 	public function insertFriend($friendID) {
-		$sql = "INSERT INTO friend (User_ID1, User_ID2, Pending, Created_On, Modified_On)
+		$sql = "INSERT INTO Friend (User_ID1, User_ID2, Pending, Created_On, Modified_On)
 				VALUES (:user_id, :friend_id, 1, NOW(), NOW())";
 
 		$parameters = array(
