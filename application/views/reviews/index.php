@@ -77,10 +77,10 @@ else
 							} ?>
 						</td>
 						<td>
-							<?php if ($review->Recommended == 1) {
+							<?php if (is_numeric($review->Recommended) && $review->Recommended == 1) {
 								echo "Yes";
 							}
-							elseif ($review->Recommended == 0) {
+							elseif (is_numeric($review->Recommended) && $review->Recommended == 0) {
 								echo "No";
 							} ?>
 						</td>

@@ -213,4 +213,15 @@ class HelpModel extends Model
 		return $GLOBALS["beans"]->queryHelper->executeWriteQuery($this->db, $sql, $parameters);
 	}
 
+	public function acceptHelpRequest($helpID) {
+		$sql = "UPDATE Help
+				SET Offered = 1,
+					Modified_On = NOW()
+				WHERE Help.ID = :help_id";
+	
+		$parameters = array(":help_id" => $helpID);
+
+		$GLOBALS["beans"]->queryHelper->executeWriteQuery($this->db, $sql, $parameters);
+	}
+
 }

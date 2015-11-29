@@ -74,6 +74,9 @@
 			<div class="col-sm-offset-2 col-sm-10">
 				<button type="button" id="back" class="btn btn-default">Back</button>
 				<button type="button" id="send" class="btn btn-default">Send a Message</button>
+				<?php if ((strcasecmp("Open", $help->Wish_Status) == 0) && ($help->Offered == 0) && ($help->Requested == 1)) { ?>
+					<button type="button" id="accept" class="btn btn-default">Accept Help Request</button>
+				<?php } ?>
 			</div>
 		</div>
 	</div>
@@ -110,17 +113,17 @@
 		</div>
 	</div>
 
-	<?php if ($help->Requested == 1 && $help->Offered == 1) { ?>
+	<?php if ((strcasecmp("Closed", $help->Wish_Status) == 0) && ($help->Requested == 1) && ($help->Offered == 1)) { ?>
 		<div class="section form-horizontal">
 			<h3 class="page-header">Review From Owner</h3>
 			<div class="form-group">
 				<label class="col-sm-2 control-label">Recommended</label>
 				<div class="col-sm-10">
 					<p class="form-control-static">
-						<?php if ($help->Review_Recommended == 1) {
+						<?php if (is_numeric($help->Review_Recommended) && $help->Review_Recommended == 1) {
 							echo "Yes";
 						}
-						elseif ($help->Review_Recommended == 0) {
+						elseif (is_numeric($help->Review_Recommended) && $help->Review_Recommended == 0) {
 							echo "No";
 						} ?>
 					</p>
@@ -145,6 +148,12 @@
 		$('#send').click(function(){
 			window.location.href = '<?php echo URL_WITH_INDEX_FILE . "messages/add/0/" . $help->Wish_Owner_ID . "/" . $help->Wish_ID; ?>';
 		});
+
+		<?php if ((strcasecmp("Open", $help->Wish_Status) == 0) && ($help->Offered == 0) && ($help->Requested == 1)) { ?>
+			$('#accept').click(function(){
+				window.location.href = '<?php echo URL_WITH_INDEX_FILE . "helps/acceptHelpRequest/" . $helpID; ?>';
+			});
+		<?php } ?>
 
 		$('#helpStatusInfo').popover({
 			container: 'body',

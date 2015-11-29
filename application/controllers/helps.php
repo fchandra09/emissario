@@ -43,4 +43,18 @@ class Helps
 		require APP . 'views/_templates/footer.php';
 	}
 
+	public function acceptHelpRequest($helpID)
+	{
+		$userID = $GLOBALS["beans"]->siteHelper->getSession("userID");
+		$help = $GLOBALS["beans"]->helpService->getHelp($helpID, $userID);
+
+		/* Ensure the help is valid to be accepted */
+		if ((strcasecmp("Open", $help->Wish_Status) == 0) && ($help->Offered == 0) && ($help->Requested == 1)) {
+			$GLOBALS["beans"]->helpService->acceptHelpRequest($helpID);
+			$GLOBALS["beans"]->wishService->updateWishStatus($help->Wish_ID, "Helped");
+		}
+
+		header('location: ' . URL_WITH_INDEX_FILE . 'helps/view/' . $helpID);
+	}
+
 }
