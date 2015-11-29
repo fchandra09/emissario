@@ -48,7 +48,7 @@ class Helps
 		$userID = $GLOBALS["beans"]->siteHelper->getSession("userID");
 		$help = $GLOBALS["beans"]->helpService->getHelp($helpID, $userID);
 
-		/* Ensure the help is valid to be accepted */
+		/* Ensure the help request is valid to be accepted */
 		if ((strcasecmp("Open", $help->Wish_Status) == 0) && ($help->Offered == 0) && ($help->Requested == 1)) {
 			$GLOBALS["beans"]->helpService->acceptHelpRequest($helpID);
 			$GLOBALS["beans"]->wishService->updateWishStatus($help->Wish_ID, "Helped");

@@ -104,4 +104,18 @@ class Wishes
 		header('location: ' . URL_WITH_INDEX_FILE . 'wishes/view/' . $_POST["wishID"]);
 	}
 
+	public function acceptHelpOffer($helpID)
+	{
+		$userID = $GLOBALS["beans"]->siteHelper->getSession("userID");
+		$help = $GLOBALS["beans"]->helpService->getHelp($helpID);
+
+		/* Ensure the help offer is valid to be accepted */
+		if ((strcasecmp("Open", $help->Wish_Status) == 0) && ($help->Wish_Owner_ID == $userID) && ($help->Offered == 1) && ($help->Requested == 0)) {
+			$GLOBALS["beans"]->helpService->acceptHelpOffer($helpID);
+			$GLOBALS["beans"]->wishService->updateWishStatus($help->Wish_ID, "Helped");
+		}
+
+		header('location: ' . URL_WITH_INDEX_FILE . 'wishes/view/' . $help->Wish_ID);
+	}
+
 }

@@ -35,4 +35,9 @@ class HelpService extends Service
 		$this->model->acceptHelpRequest($helpID);
 	}
 
+	public function acceptHelpOffer($helpID)
+	{
+		$this->model->acceptHelpOffer($helpID);
+	}
+
 }

@@ -88,9 +88,14 @@
 								<span title="Send a Message" data-userID="<?php echo $help->User_ID; ?>" data-wishID="<?php echo $help->Wish_ID; ?>">
 									<i class="glyphicon glyphicon-envelope"></i>
 								</span>
-								<?php if (strcasecmp("Closed", $wish->Status) == 0 && $help->Requested == 1 && $help->Offered == 1 && !is_numeric($help->Review_ID)) { ?>
+								<?php if ((strcasecmp("Closed", $wish->Status) == 0) && ($help->Requested == 1) && ($help->Offered == 1) && (!is_numeric($help->Review_ID))) { ?>
 									<span title="Write a Review">
 										<i class="glyphicon glyphicon-pencil"></i>
+									</span>
+								<?php }
+								else if ((strcasecmp("Open", $wish->Status) == 0) && ($help->Requested == 0) && ($help->Offered == 1)) { ?>
+									<span title="Accept Help Offer" data-id="<?php echo $help->ID; ?>">
+										<i class="glyphicon glyphicon-ok"></i>
 									</span>
 								<?php } ?>
 							</td>
@@ -166,6 +171,10 @@
 
 			$('#request').click(function(){
 				window.location.href = '<?php echo URL_WITH_INDEX_FILE . "wishes/request/" . $wishID; ?>';
+			});
+
+			$('td.column-action').find('i.glyphicon-ok').closest('span').click(function(){
+				window.location.href = '<?php echo URL_WITH_INDEX_FILE; ?>wishes/acceptHelpOffer/' + $(this).attr('data-id');
 			});
 
 		<?php } elseif (strcasecmp("Helped", $wish->Status) == 0) { ?>
