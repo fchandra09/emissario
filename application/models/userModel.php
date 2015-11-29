@@ -33,16 +33,7 @@ class UserModel extends Model
 
 		return $GLOBALS["beans"]->queryHelper->executeWriteQuery($this->db, $sql, $parameters);
 	}
-	public function sendReset($userID){
-		$sql = "SELECT User.*, Country.Country_Name, State.State_Name
-				FROM User
-				WHERE User.ID = :user_id";
 
-		$parameters = array(":user_id" => $userID);
-
-		return $GLOBALS["beans"]->queryHelper->getSingleRowObject($this->db, $sql, $parameters);
-
-	}
 	public function updateLogin() {
 		$sql = "UPDATE User
 				SET Email = :email,";
@@ -57,7 +48,7 @@ class UserModel extends Model
 				":email" => $_POST["email"]
 			);
 		if ($_POST["password"] != "") {
-			$parameters["password"] = password_hash($_POST["password"],PASSWORD_DEFAULT);
+			$parameters[":password"] = password_hash($_POST["password"],PASSWORD_DEFAULT);
 		}
 
 		$GLOBALS["beans"]->queryHelper->executeWriteQuery($this->db, $sql, $parameters);
@@ -108,6 +99,43 @@ class UserModel extends Model
 		);
 
 		return $GLOBALS["beans"]->queryHelper->executeWriteQuery($this->db, $sql, $parameters);
+	}
+
+	public function getPasswordReset($resetID) {
+		$sql = "SELECT *
+				FROM Password_Reset
+				WHERE ID = :reset_id
+					AND Used = 0
+					AND DATE_ADD(Created_On, INTERVAL 30 MINUTE) > NOW()";
+
+		$parameters = array(":reset_id" => $resetID);
+
+		return $GLOBALS["beans"]->queryHelper->getSingleRowObject($this->db, $sql, $parameters);
+	}
+
+	public function resetPassword($email) {
+		$sql = "UPDATE User
+				SET Password = :password,
+					Modified_On = NOW()
+				WHERE User.Email = :email";
+
+		$parameters = array(
+				":email" => $email,
+				":password" => password_hash($_POST["password"],PASSWORD_DEFAULT)
+		);
+
+		$GLOBALS["beans"]->queryHelper->executeWriteQuery($this->db, $sql, $parameters);
+	}
+
+	public function usePasswordReset($resetID) {
+		$sql = "UPDATE Password_Reset
+				SET Used = 1,
+					Modified_On = NOW()
+				WHERE Password_Reset.ID = :reset_id";
+	
+		$parameters = array(":reset_id" => $resetID);
+
+		$GLOBALS["beans"]->queryHelper->executeWriteQuery($this->db, $sql, $parameters);
 	}
 
 }

@@ -29,8 +29,15 @@
 <?php if ($GLOBALS["beans"]->siteHelper->getSession("forgetEmailSent") != "") {
 	$_SESSION["forgetEmailSent"] = ""; ?>
 	<div class="container">
-		<div class="alert alert-info" role="alert">
+		<div class="alert alert-warning" role="alert">
 			Please check your email for the instruction to reset your password.
+		</div>
+	</div>
+<?php } elseif ($GLOBALS["beans"]->siteHelper->getSession("passwordChanged") != "") {
+	$_SESSION["passwordChanged"] = ""; ?>
+	<div class="container">
+		<div class="alert alert-success" role="alert">
+			Password reset successful. Please login using the form below.
 		</div>
 	</div>
 <?php } ?>

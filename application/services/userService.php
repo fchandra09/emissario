@@ -25,13 +25,13 @@ class UserService extends Service
 
 		if (is_numeric($loginInfo->ID))
 		{
-			$key = $GLOBALS["beans"]->resourceService->getRandomUID();
-			$this->model->insertPasswordReset($key);
+			$resetKey = $GLOBALS["beans"]->resourceService->getRandomUID();
+			$resetID = $this->model->insertPasswordReset($resetKey);
 
 			$message = "Hi " . $loginInfo->First_Name . ",\r\n\r\n";
 			$message .= "Please use the following link to reset your password:\r\n";
-			$message .= URL_WITH_INDEX_FILE . "user/reset/" . $key . "\r\n\r\n";
-			$message .= "This link is valid for 30 minutes.\r\n\r\n";
+			$message .= URL_WITH_INDEX_FILE . "user/reset/" . $resetID . "/" . $resetKey . "\r\n\r\n";
+			$message .= "This link is valid for the next 30 minutes.\r\n\r\n";
 			$message .= "Thank you,\r\n";
 			$message .= "The team at Emissario";
 
@@ -87,6 +87,39 @@ class UserService extends Service
 		
 		// Finally, destroy the session.
 		session_destroy();
+	}
+
+	public function getResetInfo($resetID, $resetKey)
+	{
+		$passwordReset = $this->model->getPasswordReset($resetID);
+
+		$resetInfo = new stdClass();
+		$resetInfo->Valid = false;
+		$resetInfo->Email = $passwordReset->Email;
+
+		if (is_numeric($passwordReset->ID))
+		{
+			if (password_verify($resetKey, $passwordReset->Reset_Key))
+			{
+				$resetInfo->Valid = true;
+			}
+		}
+
+		return $resetInfo;
+	}
+
+	public function resetPassword()
+	{
+		$passwordReset = $this->model->getPasswordReset($_POST["resetID"]);
+
+		if (is_numeric($passwordReset->ID))
+		{
+			if (password_verify($_POST["resetKey"], $passwordReset->Reset_Key))
+			{
+				$this->model->resetPassword($passwordReset->Email);
+				$this->model->usePasswordReset($passwordReset->ID);
+			}
+		}
 	}
 
 }

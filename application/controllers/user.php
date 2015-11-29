@@ -29,8 +29,10 @@ class User
 		require APP . 'views/_templates/footer.php';
 	}
 
-	public function reset()
+	public function reset($resetID, $resetKey)
 	{
+		$resetInfo = $GLOBALS["beans"]->userService->getResetInfo($resetID, $resetKey);
+
 		require APP . 'views/_templates/header.php';
 		require APP . 'views/user/reset.php';
 		require APP . 'views/_templates/footer.php';
@@ -127,6 +129,14 @@ class User
 		}
 
 		echo json_encode($unique);
+	}
+
+	public function resetPassword()
+	{
+		$GLOBALS["beans"]->userService->resetPassword();
+
+		$_SESSION["passwordChanged"] = 1;
+		header('location: ' . URL_WITH_INDEX_FILE);
 	}
 
 }

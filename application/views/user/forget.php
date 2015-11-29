@@ -20,10 +20,6 @@
 	.col-sm-3 {
 		padding-right: 0;
 	}
-	table {
-		margin-top: 35px;
-		width: 100%;"
-	}
 </style>
 
 <div id="forgetContainer" class="container">
