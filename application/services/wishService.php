@@ -37,4 +37,9 @@ class WishService extends Service
 		$this->model->updateWishStatus($wishID, $status, $userID);
 	}
 
+	public function getPotentialWishesToHelp($userID)
+	{
+		return $this->model->getPotentialWishesToHelp($userID);
+	}
+
 }

@@ -30,6 +30,13 @@ class HelpService extends Service
 		}
 	}
 
+	public function insertHelpOffers()
+	{
+		foreach (explode(",", $_POST["wishIDs"]) as $wishID) {
+			$this->model->insertHelpOffer($wishID);
+		}
+	}
+
 	public function acceptHelpRequest($helpID)
 	{
 		$this->model->acceptHelpRequest($helpID);

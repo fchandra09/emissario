@@ -213,6 +213,18 @@ class HelpModel extends Model
 		return $GLOBALS["beans"]->queryHelper->executeWriteQuery($this->db, $sql, $parameters);
 	}
 
+	public function insertHelpOffer($wishID) {
+		$sql = "INSERT INTO Help (Wish_ID, User_ID, Requested, Offered, Created_By, Created_On, Modified_On)
+				VALUES (:wish_id, :user_id, 0, 1, :user_id, NOW(), NOW())";
+
+		$parameters = array(
+				":wish_id" => $wishID,
+				":user_id" => $GLOBALS["beans"]->siteHelper->getSession("userID")
+		);
+
+		return $GLOBALS["beans"]->queryHelper->executeWriteQuery($this->db, $sql, $parameters);
+	}
+
 	public function acceptHelpRequest($helpID) {
 		$sql = "UPDATE Help
 				SET Offered = 1,

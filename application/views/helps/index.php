@@ -4,6 +4,8 @@
 	<h2 class="page-header">Help Others</h2>
 
 	<div class="clearfix table-action">
+		<button type="button" id="offer" class="btn btn-default">Offer to Help</button>
+
 		<form method="post" class="form-inline table-filter pull-right">
 			<div class="form-group">
 				<label class="sr-only" for="wishStatus">Wish Status</label>
@@ -82,6 +84,10 @@
 	$(document).ready(function(){
 		$('#clear').click(function(){
 			window.location.href = '<?php echo URL_WITH_INDEX_FILE; ?>helps';
+		});
+
+		$('#offer').click(function(){
+			window.location.href = '<?php echo URL_WITH_INDEX_FILE; ?>helps/offer';
 		});
 
 		$('#helpStatusInfo').popover({

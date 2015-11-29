@@ -57,4 +57,21 @@ class Helps
 		header('location: ' . URL_WITH_INDEX_FILE . 'helps/view/' . $helpID);
 	}
 
+	public function offer()
+	{
+		$userID = $GLOBALS["beans"]->siteHelper->getSession("userID");
+		$potentialWishes = $GLOBALS["beans"]->wishService->getPotentialWishesToHelp($userID);
+
+		require APP . 'views/_templates/header.php';
+		require APP . 'views/helps/offer.php';
+		require APP . 'views/_templates/footer.php';
+	}
+
+	public function saveHelpOffers()
+	{
+		$GLOBALS["beans"]->helpService->insertHelpOffers();
+
+		header('location: ' . URL_WITH_INDEX_FILE . 'helps');
+	}
+
 }
