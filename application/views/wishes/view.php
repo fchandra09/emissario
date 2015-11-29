@@ -51,7 +51,7 @@
 				<?php if (strcasecmp("Open", $wish->Status) == 0) { ?>
 					<button type="button" id="edit" class="btn btn-default">Edit</button>
 					<button type="button" id="delete" class="btn btn-default">Delete</button>
-				<?php } elseif (strcasecmp("Accepted", $wish->Status) == 0) { ?>
+				<?php } elseif (strcasecmp("Helped", $wish->Status) == 0) { ?>
 					<button type="button" id="close" class="btn btn-default">Close</button>
 				<?php } ?>
 			</div>
@@ -168,7 +168,7 @@
 				window.location.href = '<?php echo URL_WITH_INDEX_FILE . "wishes/request/" . $wishID; ?>';
 			});
 
-		<?php } elseif (strcasecmp("Accepted", $wish->Status) == 0) { ?>
+		<?php } elseif (strcasecmp("Helped", $wish->Status) == 0) { ?>
 			$('#close').click(function(){
 				if (confirm('Are you sure you want to close this wish?'))
 				{

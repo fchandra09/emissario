@@ -18,7 +18,7 @@ class WishModel extends Model
 		}
 		else if (strcasecmp($wishStatus, "not_closed") == 0)
 		{
-			$sql .= " AND Wish.Status IN ('Open', 'Accepted')";
+			$sql .= " AND Wish.Status IN ('Open', 'Helped')";
 		}
 
 		if (trim($search) != "")
@@ -139,15 +139,15 @@ class WishModel extends Model
 			$sql .= " AND Wish.User_ID = :user_id";
 		}
 
-		if (strcasecmp("Accepted", $status) == 0)
+		if (strcasecmp("Helped", $status) == 0)
 		{
-			/* Only open wish can be accepted */
+			/* Only Open wish can be changed to Helped */
 			$sql .= " AND Wish.Status = 'Open'";
 		}
 		elseif (strcasecmp("Closed", $status) == 0)
 		{
-			/* Only accepted wish can be closed */
-			$sql .= " AND Wish.Status = 'Accepted'";
+			/* Only Helped wish can be changed to Closed */
+			$sql .= " AND Wish.Status = 'Helped'";
 		}
 
 		$parameters = array(

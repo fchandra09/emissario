@@ -57,7 +57,7 @@ class HelpModel extends Model
 		}
 		else if (strcasecmp($wishStatus, "not_closed") == 0)
 		{
-			$sql .= " AND Wish.Status IN ('Open', 'Accepted')";
+			$sql .= " AND Wish.Status IN ('Open', 'Helped')";
 		}
 
 		if (strcasecmp($helpStatus, "accepted") == 0)
