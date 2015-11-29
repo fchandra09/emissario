@@ -7,10 +7,12 @@ class HelpModel extends Model
 	{
 		$sql = "SELECT Help.*,
 					User.First_Name AS Helper_First_Name,
-					User.Last_Name AS Helper_Last_Name
+					User.Last_Name AS Helper_Last_Name,
+					Review.ID AS Review_ID
 				FROM Help
 				INNER JOIN Wish ON Wish.ID = Help.Wish_ID
 				INNER JOIN User ON User.ID = Help.User_ID
+				LEFT JOIN Review ON Review.ID = (SELECT R.ID FROM Review R WHERE R.Help_ID = Help.ID LIMIT 1)
 				WHERE Help.Wish_ID = :wish_id";
 
 		if (is_numeric($wishOwnerID)) {

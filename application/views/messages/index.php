@@ -5,7 +5,7 @@
 
 	<div class="clearfix table-action">
 		<button type="button" id="send" class="btn btn-default">Send a Message</button>
-	
+
 		<form method="post" class="form-inline table-filter pull-right">
 			<div class="form-group">
 				<label class="sr-only" for="messageType">Type</label>

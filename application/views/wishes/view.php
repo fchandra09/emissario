@@ -81,6 +81,11 @@
 								<span title="Send a Message" data-userID="<?php echo $help->User_ID; ?>" data-wishID="<?php echo $help->Wish_ID; ?>">
 									<i class="glyphicon glyphicon-envelope"></i>
 								</span>
+								<?php if (strcasecmp("Closed", $wish->Status) == 0 && $help->Requested == 1 && $help->Offered == 1 && !is_numeric($help->Review_ID)) { ?>
+									<span title="Write a Review">
+										<i class="glyphicon glyphicon-pencil"></i>
+									</span>
+								<?php } ?>
 							</td>
 							<td><?php echo $help->Helper_First_Name . " " . $help->Helper_Last_Name ?></td>
 							<td>
@@ -158,6 +163,10 @@
 				{
 					window.location.href = '<?php echo URL_WITH_INDEX_FILE . "wishes/close/" . $wishID; ?>';
 				}
+			});
+		<?php } elseif (strcasecmp("Closed", $wish->Status) == 0) { ?>
+			$('td.column-action').find('i.glyphicon-pencil').closest('span').click(function(){
+				window.location.href = '<?php echo URL_WITH_INDEX_FILE . "reviews/add/" . $wishID; ?>';
 			});
 		<?php } ?>
 

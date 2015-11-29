@@ -14,6 +14,8 @@ else
 	<h2 class="page-header">Reviews</h2>
 
 	<div class="clearfix table-action">
+		<button type="button" id="add" class="btn btn-default">Write a Review</button>
+
 		<form method="post" class="form-inline table-filter pull-right">
 			<div class="form-group">
 				<label class="sr-only" for="reviewType">Review Type</label>
@@ -92,6 +94,10 @@ else
 
 <script>
 	$(document).ready(function(){
+		$('#add').click(function(){
+			window.location.href = '<?php echo URL_WITH_INDEX_FILE; ?>reviews/add';
+		});
+
 		$('#clear').click(function(){
 			window.location.href = '<?php echo URL_WITH_INDEX_FILE; ?>reviews';
 		});
