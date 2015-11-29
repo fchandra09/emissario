@@ -10,7 +10,7 @@ class MessageModel extends Model
 					Sender.Last_name AS Sender_Last_Name,
 					Recipient.First_Name AS Recipient_First_Name,
 					Recipient.Last_Name AS Recipient_Last_Name,
-					DATE_FORMAT(Message.Created_On, '%m/%d/%Y %r') AS Formatted_Created_On
+					DATE_FORMAT(Message.Created_On, '%m/%d/%Y %h:%i %p') AS Formatted_Created_On
 				FROM Message
 				INNER JOIN User Sender ON Sender.ID = Message.Sender_ID
 				INNER JOIN User Recipient ON Recipient.ID = Message.Recipient_ID
@@ -59,7 +59,7 @@ class MessageModel extends Model
 					Sender.Last_name AS Sender_Last_Name,
 					Recipient.First_Name AS Recipient_First_Name,
 					Recipient.Last_Name AS Recipient_Last_Name,
-					DATE_FORMAT(Message.Created_On, '%m/%d/%Y %r') AS Formatted_Created_On,
+					DATE_FORMAT(Message.Created_On, '%m/%d/%Y %h:%i %p') AS Formatted_Created_On,
 					Wish.Description AS Wish_Description,
 					Wish.User_ID AS Wish_Owner_ID";
 
@@ -112,7 +112,7 @@ class MessageModel extends Model
 					Sender.Last_name AS Sender_Last_Name,
 					Recipient.First_Name AS Recipient_First_Name,
 					Recipient.Last_Name AS Recipient_Last_Name,
-					DATE_FORMAT(Message.Created_On, '%m/%d/%Y %r') AS Formatted_Created_On
+					DATE_FORMAT(Message.Created_On, '%m/%d/%Y %h:%i %p') AS Formatted_Created_On
 				FROM Message
 				INNER JOIN Wish ON Wish.ID = Message.Wish_ID
 				INNER JOIN User Sender ON Sender.ID = Message.Sender_ID
