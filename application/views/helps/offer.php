@@ -70,12 +70,6 @@
 									if ($friendStatusNumber == "1") {
 										echo "Yes";
 									}
-									else if ($friendStatusNumber == "2") {
-										echo "Pending Friend's Approval";
-									}
-									else if ($friendStatusNumber == "3") {
-										echo "Pending My Approval";
-									}
 									else {
 										echo "No";
 									} ?>

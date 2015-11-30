@@ -77,12 +77,6 @@ $wishDestination .= $wish->Destination_Country_Name;
 										if ($friendStatusNumber == "1") {
 											echo "Yes";
 										}
-										else if ($friendStatusNumber == "2") {
-											echo "Pending Friend's Approval";
-										}
-										else if ($friendStatusNumber == "3") {
-											echo "Pending My Approval";
-										}
 										else {
 											echo "No";
 										} ?>
@@ -90,7 +84,7 @@ $wishDestination .= $wish->Destination_Country_Name;
 									<td><?php echo $helper->Recommendation_Score; ?> %</td>
 									<td>
 										<?php if ($helper->Formatted_Travel_Date != "") {
-											echo $helper->Destination_City . ", " . $helper->Destination_Country_Name . " on " . $helper->Formatted_Travel_Date;
+											echo $helper->Origin_City . ", " . $helper->Origin_Country_Name . " &mdash; " . $helper->Destination_City . ", " . $helper->Destination_Country_Name . " on " . $helper->Formatted_Travel_Date;
 										} ?>
 									</td>
 								</tr>

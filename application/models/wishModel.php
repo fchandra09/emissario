@@ -170,9 +170,6 @@ class WishModel extends Model
 					Owner.City AS Owner_City,
 					State.State_Name AS Owner_State_Name,
 					Country.Country_Name AS Owner_Country_Name,
-					Travel.Destination_City AS Travel_Destination_City,
-					DATE_FORMAT(Travel.Travel_Date, '%m/%d/%Y') AS Formatted_Travel_Date,
-					Travel_Dest_Country.Country_Name AS Travel_Destination_Country_Name,
 					CASE WHEN Friend_Summary.Status IS NULL THEN '4 - non_friends' ELSE Friend_Summary.Status END AS Friend_Status
 				FROM Wish
 				INNER JOIN User Owner ON Owner.ID = Wish.User_ID
@@ -186,11 +183,18 @@ class WishModel extends Model
 													AND T.Travel_Date > DATE(NOW())
 													AND (T.Destination_Country = Wish.Destination_Country
 														OR LOWER(T.Destination_City) = LOWER(Wish.Destination_City))
-												ORDER BY CASE WHEN T.Destination_Country = Wish.Destination_Country THEN 1 ELSE 2 END,
-													CASE WHEN LOWER(T.Destination_City) = LOWER(Wish.Destination_City) THEN 1 ELSE 2 END,
+												ORDER BY CASE
+														WHEN T.Destination_Country = Wish.Destination_Country AND T.Origin_Country = Owner.Country THEN 1
+														WHEN T.Origin_Country = Wish.Destination_Country AND T.Destination_Country = Owner.Country THEN 1
+														ELSE 2
+													END,
+													CASE
+														WHEN LOWER(T.Destination_City) = LOWER(Wish.Destination_City) AND LOWER(T.Origin_City) = LOWER(Owner.City) THEN 1
+														WHEN LOWER(T.Origin_City) = LOWER(Wish.Destination_City) AND LOWER(T.Destination_City) = LOWER(Owner.City) THEN 1
+														ELSE 2
+													END,
 													Travel_Date
 												LIMIT 1)
-				LEFT JOIN Country Travel_Dest_Country ON Travel_Dest_Country.Country_Code = Travel.Destination_Country
 				LEFT JOIN (
 					SELECT User_ID2 AS Friend_ID, CASE WHEN Pending = 1 THEN '2 - pending_friend' ELSE '1 - friends' END AS Status
 					FROM Friend
@@ -207,8 +211,16 @@ class WishModel extends Model
 						WHERE Help.User_ID = Me.ID
 							AND Help.Wish_ID = Wish.ID
 					)
-				ORDER BY CASE WHEN Travel.Destination_Country = Wish.Destination_Country THEN 1 ELSE 2 END,
-					CASE WHEN LOWER(Travel.Destination_City) = LOWER(Wish.Destination_City) THEN 1 ELSE 2 END,
+				ORDER BY CASE
+						WHEN Travel.Destination_Country = Wish.Destination_Country AND Travel.Origin_Country = Owner.Country THEN 1
+						WHEN Travel.Origin_Country = Wish.Destination_Country AND Travel.Destination_Country = Owner.Country THEN 1
+						ELSE 2
+					END,
+					CASE
+						WHEN LOWER(Travel.Destination_City) = LOWER(Wish.Destination_City) AND LOWER(Travel.Origin_City) = LOWER(Owner.City) THEN 1
+						WHEN LOWER(Travel.Origin_City) = LOWER(Wish.Destination_City) AND LOWER(Travel.Destination_City) = LOWER(Owner.City) THEN 1
+						ELSE 2
+					END,
 					Friend_Status,
 					CASE WHEN Me.Country = Owner.Country THEN 1 ELSE 2 END,
 					CASE WHEN Me.State = Owner.State THEN 1 ELSE 2 END,
