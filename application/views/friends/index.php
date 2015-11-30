@@ -72,9 +72,15 @@ else {
 								<span title="Reject" data-id="<?php echo $friend->ID; ?>">
 									<i class="glyphicon glyphicon-remove"></i>
 								</span>
+								<span title="View Connection" data-id="<?php echo $friend->ID; ?>">
+									<i class="glyphicon glyphicon-user"></i>
+								</span>
 							<?php } elseif (strcasecmp("pending_friend", $friendType) == 0) { ?>
 								<span title="Cancel" data-id="<?php echo $friend->ID; ?>">
 									<i class="glyphicon glyphicon-remove"></i>
+								</span>
+								<span title="View Connection" data-id="<?php echo $friend->ID; ?>">
+									<i class="glyphicon glyphicon-user"></i>
 								</span>
 							<?php } ?>
 						</td>
@@ -122,9 +128,15 @@ else {
 			$('td.column-action').find('i.glyphicon-remove').closest('span').click(function(){
 				window.location.href = '<?php echo URL_WITH_INDEX_FILE; ?>friends/delete/' + $(this).attr('data-id') + '/<?php echo $friendType; ?>';
 			});
+			$('td.column-action').find('i.glyphicon-user').closest('span').click(function(){
+				window.open('<?php echo URL_WITH_INDEX_FILE; ?>friends/viewConnection/' + $(this).attr('data-id'), 'connection', 'width=600, height=600, scrollbars, resizable');
+			});
 		<?php } elseif (strcasecmp("pending_friend", $friendType) == 0) { ?>
 			$('td.column-action').find('i.glyphicon-remove').closest('span').click(function(){
 				window.location.href = '<?php echo URL_WITH_INDEX_FILE; ?>friends/delete/' + $(this).attr('data-id') + '/<?php echo $friendType; ?>';
+			});
+			$('td.column-action').find('i.glyphicon-user').closest('span').click(function(){
+				window.open('<?php echo URL_WITH_INDEX_FILE; ?>friends/viewConnection/' + $(this).attr('data-id'), 'connection', 'width=600, height=600, scrollbars, resizable');
 			});
 		<?php } ?>
 	});

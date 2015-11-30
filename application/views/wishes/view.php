@@ -79,9 +79,6 @@
 					<?php foreach ($helps as $help) { ?>
 						<tr>
 							<td width="1%" class="column-action">
-								<span title="View Connection" data-id="<?php echo $help->User_ID; ?>">
-									<i class="glyphicon glyphicon-user"></i>
-								</span>
 								<span title="Send a Message" data-userID="<?php echo $help->User_ID; ?>" data-wishID="<?php echo $help->Wish_ID; ?>">
 									<i class="glyphicon glyphicon-envelope"></i>
 								</span>
@@ -95,6 +92,9 @@
 										<i class="glyphicon glyphicon-ok"></i>
 									</span>
 								<?php } ?>
+								<span title="View Connection" data-id="<?php echo $help->User_ID; ?>">
+									<i class="glyphicon glyphicon-user"></i>
+								</span>
 							</td>
 							<td><?php echo $help->Helper_First_Name . " " . $help->Helper_Last_Name ?></td>
 							<td>

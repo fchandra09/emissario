@@ -12,14 +12,15 @@
 					<thead>
 						<tr>
 							<th width="1%">&nbsp;</th>
+							<th width="1%">&nbsp;</th>
 							<th>Description</th>
 							<th>Destination</th>
+							<th width="1%">&nbsp;</th>
 							<th>Owner</th>
 							<th>Location</th>
 							<th>Friends</th>
 							<th class="hidden">Weight</th>
 							<th class="hidden">Compensation</th>
-							<th width="1%">&nbsp;</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -27,6 +28,11 @@
 							<tr>
 								<td width="1%">
 									<input type="checkbox" class="wish-checkbox" value="<?php echo $wish->ID; ?>" />
+								</td>
+								<td width="1%" class="column-action">
+									<a tabindex="0" role="button" data-toggle="popover">
+										<i class="glyphicon glyphicon-th-list"></i>
+									</a>
 								</td>
 								<td class="truncate"><?php echo $wish->Description; ?></td>
 								<td>
@@ -36,6 +42,11 @@
 									}
 									$destination .= $wish->Destination_Country_Name;
 									echo $destination; ?>
+								</td>
+								<td width="1%" class="column-action">
+									<span title="View Connection" data-id="<?php echo $wish->Owner_ID; ?>">
+										<i class="glyphicon glyphicon-user"></i>
+									</span>
 								</td>
 								<td><?php echo $wish->Owner_First_Name . " " . $wish->Owner_Last_Name ; ?></td>
 								<td>
@@ -71,14 +82,6 @@
 								</td>
 								<td class="hidden weight-column"><?php echo $wish->Weight; ?></td>
 								<td class="hidden compensation-column"><?php echo $wish->Compensation; ?></td>
-								<td width="1%" class="column-action">
-									<span title="View Connection" data-id="<?php echo $wish->Owner_ID; ?>">
-										<i class="glyphicon glyphicon-user"></i>
-									</span>
-									<a tabindex="0" role="button" data-toggle="popover">
-										<i class="glyphicon glyphicon-th-list"></i>
-									</a>
-								</td>
 							</tr>
 						<?php } ?>
 					</tbody>
@@ -108,7 +111,7 @@
 		$('td.column-action').find('i.glyphicon-th-list').closest('a').popover({
 			container: 'body',
 			html: true,
-			placement: 'auto right',
+			placement: 'auto bottom',
 			title: 'Additional Info',
 			trigger: 'focus',
 			content: function() {

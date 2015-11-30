@@ -35,12 +35,12 @@ $wishDestination .= $wish->Destination_Country_Name;
 					<thead>
 						<tr>
 							<th width="1%">&nbsp;</th>
+							<th width="1%">&nbsp;</th>
 							<th>Name</th>
 							<th>Location</th>
 							<th>Friends</th>
 							<th>Recommended</th>
 							<th>Travel Plan</th>
-							<th width="1%">&nbsp;</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -49,6 +49,11 @@ $wishDestination .= $wish->Destination_Country_Name;
 								<tr>
 									<td width="1%">
 										<input type="checkbox" class="helper-checkbox" value="<?php echo $helper->ID; ?>" />
+									</td>
+									<td width="1%" class="column-action">
+										<span title="View Connection" data-id="<?php echo $helper->ID; ?>">
+											<i class="glyphicon glyphicon-user"></i>
+										</span>
 									</td>
 									<td><?php echo $helper->First_Name . " " . $helper->Last_Name ; ?></td>
 									<td>
@@ -87,11 +92,6 @@ $wishDestination .= $wish->Destination_Country_Name;
 										<?php if ($helper->Formatted_Travel_Date != "") {
 											echo $helper->Destination_City . ", " . $helper->Destination_Country_Name . " on " . $helper->Formatted_Travel_Date;
 										} ?>
-									</td>
-									<td width="1%" class="column-action">
-										<span title="View Connection" data-id="<?php echo $helper->ID; ?>">
-											<i class="glyphicon glyphicon-user"></i>
-										</span>
 									</td>
 								</tr>
 							<?php }

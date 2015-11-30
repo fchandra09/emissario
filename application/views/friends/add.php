@@ -131,14 +131,18 @@
 				for (var i = 0; i < potentialFriends.length; i++) {
 					tr = $('<tr></tr>');
 
-					span = $('<span title="Add"><i class="glyphicon glyphicon-plus"></i></span>');
-					span.click(addSelected);
+					spanAdd = $('<span title="Add"><i class="glyphicon glyphicon-plus"></i></span>');
+					spanAdd.click(addSelected);
+
+					spanConnection = $('<span title="View Connection"><i class="glyphicon glyphicon-user"></i></span>');
+					spanConnection.click(viewConnection);
 
 					friendIDField = $('<input type="hidden" class="potentialFriendID" />')
 					friendIDField.val(potentialFriends[i].ID);
 
 					tdAction = $('<td width="1%" class="column-action"></td>');
-					tdAction.append(span);
+					tdAction.append(spanAdd);
+					tdAction.append(spanConnection);
 					tdAction.append(friendIDField);
 
 					tr.append(tdAction);
@@ -180,10 +184,14 @@
 			/* Remove add icon */
 			tr.find('i.glyphicon-plus').closest('span').remove();
 
+			/* Re-bind connection icon */
+			spanConnection = tr.find('i.glyphicon-user').closest('span');
+			spanConnection.click(viewConnection);
+
 			/* Add delete icon */
-			span = $('<span title="Remove"><i class="glyphicon glyphicon-remove"></i></span>');
-			span.click(removeSelected);
-			span.insertBefore(tr.find('input.potentialFriendID'));
+			spanRemove = $('<span title="Remove"><i class="glyphicon glyphicon-remove"></i></span>');
+			spanRemove.click(removeSelected);
+			spanRemove.insertBefore(spanConnection);
 
 			/* Add row to chart data */
 			$('#selectedUsers').find('tbody').append(tr);
@@ -195,5 +203,12 @@
 
 	removeSelected = function() {
 		$(this).closest('tr').remove();
+	}
+
+	viewConnection = function() {
+		var resultRow = $(this).closest('tr');
+		var friendID = resultRow.find('input.potentialFriendID').val();
+
+		window.open('<?php echo URL_WITH_INDEX_FILE; ?>friends/viewConnection/' + friendID, 'connection', 'width=600, height=600, scrollbars, resizable');
 	}
 </script>
