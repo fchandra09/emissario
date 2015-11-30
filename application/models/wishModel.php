@@ -186,12 +186,20 @@ class WishModel extends Model
 												ORDER BY CASE
 														WHEN T.Destination_Country = Wish.Destination_Country AND T.Origin_Country = Owner.Country THEN 1
 														WHEN T.Origin_Country = Wish.Destination_Country AND T.Destination_Country = Owner.Country THEN 1
-														ELSE 2
+														WHEN T.Destination_Country = Wish.Destination_Country THEN 2
+														WHEN T.Origin_Country = Wish.Destination_Country THEN 2
+														WHEN T.Destination_Country = Owner.Country THEN 3
+														WHEN T.Origin_Country = Owner.Country THEN 3
+														ELSE 4
 													END,
 													CASE
 														WHEN LOWER(T.Destination_City) = LOWER(Wish.Destination_City) AND LOWER(T.Origin_City) = LOWER(Owner.City) THEN 1
 														WHEN LOWER(T.Origin_City) = LOWER(Wish.Destination_City) AND LOWER(T.Destination_City) = LOWER(Owner.City) THEN 1
-														ELSE 2
+														WHEN LOWER(T.Destination_City) = LOWER(Wish.Destination_City) THEN 2
+														WHEN LOWER(T.Origin_City) = LOWER(Wish.Destination_City) THEN 2
+														WHEN LOWER(T.Destination_City) = LOWER(Owner.City) THEN 3
+														WHEN LOWER(T.Origin_City) = LOWER(Owner.City) THEN 3
+														ELSE 4
 													END,
 													Travel_Date
 												LIMIT 1)
@@ -214,12 +222,20 @@ class WishModel extends Model
 				ORDER BY CASE
 						WHEN Travel.Destination_Country = Wish.Destination_Country AND Travel.Origin_Country = Owner.Country THEN 1
 						WHEN Travel.Origin_Country = Wish.Destination_Country AND Travel.Destination_Country = Owner.Country THEN 1
-						ELSE 2
+						WHEN Travel.Destination_Country = Wish.Destination_Country THEN 2
+						WHEN Travel.Origin_Country = Wish.Destination_Country THEN 2
+						WHEN Travel.Destination_Country = Owner.Country THEN 3
+						WHEN Travel.Origin_Country = Owner.Country THEN 3
+						ELSE 4
 					END,
 					CASE
 						WHEN LOWER(Travel.Destination_City) = LOWER(Wish.Destination_City) AND LOWER(Travel.Origin_City) = LOWER(Owner.City) THEN 1
 						WHEN LOWER(Travel.Origin_City) = LOWER(Wish.Destination_City) AND LOWER(Travel.Destination_City) = LOWER(Owner.City) THEN 1
-						ELSE 2
+						WHEN LOWER(Travel.Destination_City) = LOWER(Wish.Destination_City) THEN 2
+						WHEN LOWER(Travel.Origin_City) = LOWER(Wish.Destination_City) THEN 2
+						WHEN LOWER(Travel.Destination_City) = LOWER(Owner.City) THEN 3
+						WHEN LOWER(Travel.Origin_City) = LOWER(Owner.City) THEN 3
+						ELSE 4
 					END,
 					Friend_Status,
 					CASE WHEN Me.Country = Owner.Country THEN 1 ELSE 2 END,
