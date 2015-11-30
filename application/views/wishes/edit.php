@@ -48,15 +48,6 @@ else
 			</div>
 		</div>
 		<div class="form-group">
-			<label for="maxDate" class="col-sm-2 control-label">Max Date</label>
-			<div class="col-sm-10">
-				<div class="input-group date">
-					<input type="text" id="maxDate" name="maxDate" value="<?php echo $wish->Formatted_Max_Date ?>" class="form-control" />
-					<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-				</div>
-			</div>
-		</div>
-		<div class="form-group">
 			<label for="compensation" class="col-sm-2 control-label">Compensation</label>
 			<div class="col-sm-10">
 				<input type="text" id="compensation" name="compensation" value="<?php echo $wish->Compensation ?>" class="form-control" />
@@ -83,12 +74,6 @@ else
 			clearBtn: true
 		});
 
-		$('#form').validate({
-			rules: {
-				maxDate: {
-					date: true
-				}
-			}
-		});
+		$('#form').validate({});
 	});
 </script>

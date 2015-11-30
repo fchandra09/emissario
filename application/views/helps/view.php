@@ -64,12 +64,6 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="col-sm-2 control-label">Max Date</label>
-			<div class="col-sm-10">
-				<p class="form-control-static"><?php echo $help->Wish_Max_Date; ?></p>
-			</div>
-		</div>
-		<div class="form-group">
 			<label class="col-sm-2 control-label">Compensation</label>
 			<div class="col-sm-10">
 				<p class="form-control-static"><?php echo $help->Wish_Compensation ?></p>
