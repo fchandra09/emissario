@@ -66,6 +66,7 @@
 				<thead>
 					<tr>
 						<th width="1%">&nbsp;</th>
+						<th width="1%">&nbsp;</th>
 						<th>Helper</th>
 						<th>
 							Status
@@ -92,6 +93,8 @@
 										<i class="glyphicon glyphicon-ok"></i>
 									</span>
 								<?php } ?>
+							</td>
+							<td width="1%" class="column-action">
 								<span title="View Connection" data-id="<?php echo $help->User_ID; ?>">
 									<i class="glyphicon glyphicon-user"></i>
 								</span>
