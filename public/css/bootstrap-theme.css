@@ -615,8 +615,11 @@ fieldset[disabled] .btn-danger.active {
 .column-action {
 	white-space: nowrap;
 }
-.column-action span {
+.column-action span, .column-action a {
 	cursor:pointer; display:inline-block; padding:0 5px;
+}
+.column-action .glyphicon {
+	color: #616161;
 }
 .info-button {
 	margin-left: 5px;

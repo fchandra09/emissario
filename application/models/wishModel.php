@@ -167,6 +167,8 @@ class WishModel extends Model
 					Wish.Description,
 					Wish.Destination_City,
 					Wish_Dest_Country.Country_Name AS Destination_Country_Name,
+					Wish.Weight,
+					Wish.Compensation,
 					Owner.ID AS Owner_ID,
 					Owner.First_Name AS Owner_First_Name,
 					Owner.Last_Name AS Owner_Last_Name,

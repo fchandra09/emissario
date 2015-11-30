@@ -17,6 +17,8 @@
 							<th>Owner</th>
 							<th>Location</th>
 							<th>Friends</th>
+							<th class="hidden">Weight</th>
+							<th class="hidden">Compensation</th>
 							<th width="1%">&nbsp;</th>
 						</tr>
 					</thead>
@@ -67,10 +69,15 @@
 										echo "No";
 									} ?>
 								</td>
+								<td class="hidden weight-column"><?php echo $wish->Weight; ?></td>
+								<td class="hidden compensation-column"><?php echo $wish->Compensation; ?></td>
 								<td width="1%" class="column-action">
 									<span title="View Connection" data-id="<?php echo $wish->Owner_ID; ?>">
 										<i class="glyphicon glyphicon-user"></i>
 									</span>
+									<a tabindex="0" role="button" data-toggle="popover">
+										<i class="glyphicon glyphicon-th-list"></i>
+									</a>
 								</td>
 							</tr>
 						<?php } ?>
@@ -96,6 +103,18 @@
 
 		$('td.column-action').find('i.glyphicon-user').closest('span').click(function(){
 			window.open('<?php echo URL_WITH_INDEX_FILE; ?>friends/viewConnection/' + $(this).attr('data-id'), 'connection', 'width=600, height=600, scrollbars, resizable');
+		});
+
+		$('td.column-action').find('i.glyphicon-th-list').closest('a').popover({
+			container: 'body',
+			html: true,
+			placement: 'auto right',
+			title: 'Additional Info',
+			trigger: 'focus',
+			content: function() {
+				return '<b>Weight:</b> ' + $(this).closest('tr').find('.weight-column').html() + '<br/>' +
+					'<b>Compensation:</b> ' + $(this).closest('tr').find('.compensation-column').html() + '<br/>';
+			}
 		});
 
 		$.validator.addMethod('atLeastOne', function() {
