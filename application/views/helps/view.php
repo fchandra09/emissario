@@ -24,7 +24,12 @@
 		<div class="form-group">
 			<label class="col-sm-2 control-label">Owner</label>
 			<div class="col-sm-10">
-				<p class="form-control-static"><?php echo $help->Wish_Owner_First_Name . " " . $help->Wish_Owner_Last_Name; ?></p>
+				<p class="form-control-static">
+					<?php echo $help->Wish_Owner_First_Name . " " . $help->Wish_Owner_Last_Name; ?>
+					<span id="viewConnection" title="View Connection" style="cursor:pointer; margin-left:8px;">
+						<i class="glyphicon glyphicon-user"></i>
+					</span>
+				</p>
 			</div>
 		</div>
 		<div class="form-group">
@@ -141,6 +146,10 @@
 
 <script>
 	$(document).ready(function(){
+		$('#viewConnection').click(function(){
+			window.open('<?php echo URL_WITH_INDEX_FILE . "friends/viewConnection/" . $help->Wish_Owner_ID; ?>', 'connection', 'width=600, height=600, scrollbars, resizable');
+		});
+
 		$('#back').click(function(){
 			window.location.href = '<?php echo URL_WITH_INDEX_FILE; ?>helps';
 		});

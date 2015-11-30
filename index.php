@@ -29,6 +29,7 @@ require APP . '/config/config.php';
 // If you want to load pdoDebug via Composer, then have a look here: https://github.com/panique/pdo-debug
 require APP . '/libs/pdo-debug.php';
 require APP . '/libs/password.php';
+require APP . '/libs/node.php';
 
 // load application class
 require APP . '/core/application.php';

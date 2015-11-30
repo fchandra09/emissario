@@ -85,6 +85,9 @@
 					<?php foreach ($helps as $help) { ?>
 						<tr>
 							<td width="1%" class="column-action">
+								<span title="View Connection" data-id="<?php echo $help->User_ID; ?>">
+									<i class="glyphicon glyphicon-user"></i>
+								</span>
 								<span title="Send a Message" data-userID="<?php echo $help->User_ID; ?>" data-wishID="<?php echo $help->Wish_ID; ?>">
 									<i class="glyphicon glyphicon-envelope"></i>
 								</span>
@@ -189,6 +192,10 @@
 				window.location.href = '<?php echo URL_WITH_INDEX_FILE . "reviews/add/" . $wishID; ?>';
 			});
 		<?php } ?>
+
+		$('td.column-action').find('i.glyphicon-user').closest('span').click(function(){
+			window.open('<?php echo URL_WITH_INDEX_FILE; ?>friends/viewConnection/' + $(this).attr('data-id'), 'connection', 'width=600, height=600, scrollbars, resizable');
+		});
 
 		$('td.column-action').find('i.glyphicon-envelope').closest('span').click(function(){
 			window.location.href = '<?php echo URL_WITH_INDEX_FILE; ?>messages/add/0/' + $(this).attr('data-userID') + '/' + $(this).attr('data-wishID');

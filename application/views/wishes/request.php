@@ -40,6 +40,7 @@ $wishDestination .= $wish->Destination_Country_Name;
 							<th>Friends</th>
 							<th>Recommended</th>
 							<th>Travel Plan</th>
+							<th width="1%">&nbsp;</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -87,6 +88,11 @@ $wishDestination .= $wish->Destination_Country_Name;
 											echo $helper->Destination_City . ", " . $helper->Destination_Country_Name . " on " . $helper->Formatted_Travel_Date;
 										} ?>
 									</td>
+									<td width="1%" class="column-action">
+										<span title="View Connection" data-id="<?php echo $helper->ID; ?>">
+											<i class="glyphicon glyphicon-user"></i>
+										</span>
+									</td>
 								</tr>
 							<?php }
 						} ?>
@@ -108,6 +114,10 @@ $wishDestination .= $wish->Destination_Country_Name;
 	$(document).ready(function(){
 		$('#cancel').click(function(){
 			window.location.href = '<?php echo URL_WITH_INDEX_FILE . "wishes/view/" . $wishID; ?>';
+		});
+
+		$('td.column-action').find('i.glyphicon-user').closest('span').click(function(){
+			window.open('<?php echo URL_WITH_INDEX_FILE; ?>friends/viewConnection/' + $(this).attr('data-id'), 'connection', 'width=600, height=600, scrollbars, resizable');
 		});
 
 		$.validator.addMethod('atLeastOne', function() {

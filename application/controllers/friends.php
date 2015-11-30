@@ -90,4 +90,23 @@ class Friends
 		$_SESSION["friendType"] = "pending_mine";
 		header('location: ' . URL_WITH_INDEX_FILE . 'friends');
 	}
+
+	public function viewConnection($targetUserID)
+	{
+		$userID = $GLOBALS["beans"]->siteHelper->getSession("userID");
+		$targetNodes = $GLOBALS["beans"]->friendService->getShortestPath($userID, $targetUserID);
+
+		$connected = false;
+		if (count($targetNodes) > 0)
+		{
+			$connected = true;
+			$graphData = $GLOBALS["beans"]->friendService->getGraphDataset($targetNodes);
+		}
+
+		$displayNavbar = false;
+
+		require APP . 'views/_templates/header.php';
+		require APP . 'views/friends/connection.php';
+	}
+
 }

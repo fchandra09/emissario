@@ -17,6 +17,7 @@
 							<th>Owner</th>
 							<th>Location</th>
 							<th>Friends</th>
+							<th width="1%">&nbsp;</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -66,6 +67,11 @@
 										echo "No";
 									} ?>
 								</td>
+								<td width="1%" class="column-action">
+									<span title="View Connection" data-id="<?php echo $wish->Owner_ID; ?>">
+										<i class="glyphicon glyphicon-user"></i>
+									</span>
+								</td>
 							</tr>
 						<?php } ?>
 					</tbody>
@@ -86,6 +92,10 @@
 	$(document).ready(function(){
 		$('#cancel').click(function(){
 			window.location.href = '<?php echo URL_WITH_INDEX_FILE; ?>helps';
+		});
+
+		$('td.column-action').find('i.glyphicon-user').closest('span').click(function(){
+			window.open('<?php echo URL_WITH_INDEX_FILE; ?>friends/viewConnection/' + $(this).attr('data-id'), 'connection', 'width=600, height=600, scrollbars, resizable');
 		});
 
 		$.validator.addMethod('atLeastOne', function() {
