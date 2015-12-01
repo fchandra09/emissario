@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS Review (
     Help_ID BIGINT NOT NULL,
     Recommended BIT NOT NULL,
     Comments VARCHAR(1000) NULL,
-    Created_By BIGINT NULL,
+    Created_By BIGINT NOT NULL,
     Created_On DATETIME NULL,
     Modified_On DATETIME NULL,
     PRIMARY KEY (ID),
