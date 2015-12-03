@@ -1,7 +1,7 @@
 # Emissario
 
 *University of Illinois at Urbana-Champaign  
-Database Systems (CS411) Final Project*  
+Database Systems (CS411) Fall 2015 Final Project*  
 
 ### Summary
 Emissario will help connect students who need to send a package to a family member or buy something from their hometown with another student who has travel plan to the same destination.
