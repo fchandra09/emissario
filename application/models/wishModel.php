@@ -6,9 +6,11 @@ class WishModel extends Model
 	public function getWishes($userID, $wishStatus = "", $search = "")
 	{
 		$sql = "SELECT Wish.*,
-					Country.Country_Name AS Destination_Country_Name
+					Orig_Country.Country_Name AS Origin_Country_Name,
+					Dest_Country.Country_Name AS Destination_Country_Name
 				FROM Wish
-				LEFT JOIN Country ON Country.Country_Code = Wish.Destination_Country
+				LEFT JOIN Country Orig_Country ON Orig_Country.Country_Code = Wish.Origin_Country
+				LEFT JOIN Country Dest_Country ON Dest_Country.Country_Code = Wish.Destination_Country
 				WHERE Wish.User_ID = :user_id";
 
 		if (strcasecmp($wishStatus, "closed") == 0)
@@ -23,8 +25,10 @@ class WishModel extends Model
 		if (trim($search) != "")
 		{
 			$sql .= " AND (Wish.Description LIKE :search
+						OR Wish.Origin_City LIKE :search
+						OR Orig_Country.Country_Name LIKE :search
 						OR Wish.Destination_City LIKE :search
-						OR Country.Country_Name LIKE :search)";
+						OR Dest_Country.Country_Name LIKE :search)";
 		}
 		
 		$sql .= " ORDER BY Wish.Created_On";
@@ -44,9 +48,11 @@ class WishModel extends Model
 	public function getWish($wishID, $userID = "", $wishStatus = "")
 	{
 		$sql = "SELECT Wish.*,
-					Country.Country_Name AS Destination_Country_Name
+					Orig_Country.Country_Name AS Origin_Country_Name,
+					Dest_Country.Country_Name AS Destination_Country_Name
 				FROM Wish
-				LEFT JOIN Country ON Country.Country_Code = Wish.Destination_Country
+				LEFT JOIN Country Orig_Country ON Orig_Country.Country_Code = Wish.Origin_Country
+				LEFT JOIN Country Dest_Country ON Dest_Country.Country_Code = Wish.Destination_Country
 				WHERE Wish.ID = :wish_id";
 
 		if (is_numeric($userID)) {
@@ -69,13 +75,15 @@ class WishModel extends Model
 	}
 
 	public function insertWish() {
-		$sql = "INSERT INTO Wish (User_ID, Description, Weight, Destination_City, Destination_Country, Compensation, Status, Created_On, Modified_On)
-				VALUES (:user_id, :description, :weight, :destination_city, :destination_country, :compensation, 'Open', NOW(), NOW())";
+		$sql = "INSERT INTO Wish (User_ID, Description, Weight, Origin_City, Origin_Country, Destination_City, Destination_Country, Compensation, Status, Created_On, Modified_On)
+				VALUES (:user_id, :description, :weight, :origin_city, :origin_country, :destination_city, :destination_country, :compensation, 'Open', NOW(), NOW())";
 
 		$parameters = array(
 				":user_id" => $_POST["userID"],
 				":description" => $_POST["description"],
 				":weight" => $_POST["weight"],
+				":origin_city" => $_POST["originCity"],
+				":origin_country" => $_POST["originCountry"],
 				":destination_city" => $_POST["destinationCity"],
 				":destination_country" => $_POST["destinationCountry"],
 				":compensation" => $_POST["compensation"]
@@ -88,6 +96,8 @@ class WishModel extends Model
 		$sql = "UPDATE Wish
 				SET Description = :description,
 					Weight = :weight,
+					Origin_City = :origin_city,
+					Origin_Country = :origin_country,
 					Destination_City = :destination_city,
 					Destination_Country = :destination_country,
 					Compensation = :compensation,
@@ -100,6 +110,8 @@ class WishModel extends Model
 				":user_id" => $_POST["userID"],
 				":description" => $_POST["description"],
 				":weight" => $_POST["weight"],
+				":origin_city" => $_POST["originCity"],
+				":origin_country" => $_POST["originCountry"],
 				":destination_city" => $_POST["destinationCity"],
 				":destination_country" => $_POST["destinationCountry"],
 				":compensation" => $_POST["compensation"]
@@ -160,7 +172,9 @@ class WishModel extends Model
 	{
 		$sql = "SELECT Wish.ID,
 					Wish.Description,
+					Wish.Origin_City,
 					Wish.Destination_City,
+					Wish_Orig_Country.Country_Name AS Origin_Country_Name,
 					Wish_Dest_Country.Country_Name AS Destination_Country_Name,
 					Wish.Weight,
 					Wish.Compensation,
@@ -176,29 +190,22 @@ class WishModel extends Model
 				INNER JOIN User Me ON Me.ID = :user_id AND Me.ID <> Owner.ID
 				LEFT JOIN State ON State.State_Code = Owner.State AND State.Country_Code = Owner.Country
 				LEFT JOIN Country ON Country.Country_Code = Owner.Country
+				LEFT JOIN Country Wish_Orig_Country ON Wish_Orig_Country.Country_Code = Wish.Origin_Country
 				LEFT JOIN Country Wish_Dest_Country ON Wish_Dest_Country.Country_Code = Wish.Destination_Country
 				LEFT JOIN Travel ON Travel.ID = (SELECT T.ID
 												FROM Travel T
 												WHERE T.User_ID = Me.ID
 													AND T.Travel_Date > DATE(NOW())
-													AND (T.Destination_Country = Wish.Destination_Country
-														OR LOWER(T.Destination_City) = LOWER(Wish.Destination_City))
 												ORDER BY CASE
-														WHEN T.Destination_Country = Wish.Destination_Country AND T.Origin_Country = Owner.Country THEN 1
-														WHEN T.Origin_Country = Wish.Destination_Country AND T.Destination_Country = Owner.Country THEN 1
+														WHEN T.Destination_Country = Wish.Destination_Country AND T.Origin_Country = Wish.Origin_Country THEN 1
 														WHEN T.Destination_Country = Wish.Destination_Country THEN 2
-														WHEN T.Origin_Country = Wish.Destination_Country THEN 2
-														WHEN T.Destination_Country = Owner.Country THEN 3
-														WHEN T.Origin_Country = Owner.Country THEN 3
+														WHEN T.Origin_Country = Wish.Origin_Country THEN 3
 														ELSE 4
 													END,
 													CASE
-														WHEN LOWER(T.Destination_City) = LOWER(Wish.Destination_City) AND LOWER(T.Origin_City) = LOWER(Owner.City) THEN 1
-														WHEN LOWER(T.Origin_City) = LOWER(Wish.Destination_City) AND LOWER(T.Destination_City) = LOWER(Owner.City) THEN 1
+														WHEN LOWER(T.Destination_City) = LOWER(Wish.Destination_City) AND LOWER(T.Origin_City) = LOWER(Wish.Origin_City) THEN 1
 														WHEN LOWER(T.Destination_City) = LOWER(Wish.Destination_City) THEN 2
-														WHEN LOWER(T.Origin_City) = LOWER(Wish.Destination_City) THEN 2
-														WHEN LOWER(T.Destination_City) = LOWER(Owner.City) THEN 3
-														WHEN LOWER(T.Origin_City) = LOWER(Owner.City) THEN 3
+														WHEN LOWER(T.Origin_City) = LOWER(Wish.Origin_City) THEN 3
 														ELSE 4
 													END,
 													Travel_Date
@@ -220,21 +227,15 @@ class WishModel extends Model
 							AND Help.Wish_ID = Wish.ID
 					)
 				ORDER BY CASE
-						WHEN Travel.Destination_Country = Wish.Destination_Country AND Travel.Origin_Country = Owner.Country THEN 1
-						WHEN Travel.Origin_Country = Wish.Destination_Country AND Travel.Destination_Country = Owner.Country THEN 1
+						WHEN Travel.Destination_Country = Wish.Destination_Country AND Travel.Origin_Country = Wish.Origin_Country THEN 1
 						WHEN Travel.Destination_Country = Wish.Destination_Country THEN 2
-						WHEN Travel.Origin_Country = Wish.Destination_Country THEN 2
-						WHEN Travel.Destination_Country = Owner.Country THEN 3
-						WHEN Travel.Origin_Country = Owner.Country THEN 3
+						WHEN Travel.Origin_Country = Wish.Origin_Country THEN 3
 						ELSE 4
 					END,
 					CASE
-						WHEN LOWER(Travel.Destination_City) = LOWER(Wish.Destination_City) AND LOWER(Travel.Origin_City) = LOWER(Owner.City) THEN 1
-						WHEN LOWER(Travel.Origin_City) = LOWER(Wish.Destination_City) AND LOWER(Travel.Destination_City) = LOWER(Owner.City) THEN 1
+						WHEN LOWER(Travel.Destination_City) = LOWER(Wish.Destination_City) AND LOWER(Travel.Origin_City) = LOWER(Wish.Origin_City) THEN 1
 						WHEN LOWER(Travel.Destination_City) = LOWER(Wish.Destination_City) THEN 2
-						WHEN LOWER(Travel.Origin_City) = LOWER(Wish.Destination_City) THEN 2
-						WHEN LOWER(Travel.Destination_City) = LOWER(Owner.City) THEN 3
-						WHEN LOWER(Travel.Origin_City) = LOWER(Owner.City) THEN 3
+						WHEN LOWER(Travel.Origin_City) = LOWER(Wish.Origin_City) THEN 3
 						ELSE 4
 					END,
 					Friend_Status,

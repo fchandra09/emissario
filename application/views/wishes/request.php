@@ -1,5 +1,11 @@
 <?php if (!$this) { exit(header('HTTP/1.0 403 Forbidden')); }
 
+$wishOrigin = $wish->Origin_City;
+if ($wish->Origin_Country_Name != "" && $wishOrigin != "") {
+	$wishOrigin .= ", ";
+}
+$wishOrigin .= $wish->Origin_Country_Name;
+
 $wishDestination = $wish->Destination_City;
 if ($wish->Destination_Country_Name != "" && $wishDestination != "") {
 	$wishDestination .= ", ";
@@ -15,6 +21,12 @@ $wishDestination .= $wish->Destination_Country_Name;
 			<label class="col-sm-2 control-label">Wish Description</label>
 			<div class="col-sm-10">
 				<p class="form-control-static"><?php echo $wish->Description ?></p>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Origin</label>
+			<div class="col-sm-10">
+				<p class="form-control-static"><?php echo $wishOrigin; ?></p>
 			</div>
 		</div>
 		<div class="form-group">

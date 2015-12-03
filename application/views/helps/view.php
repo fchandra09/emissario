@@ -10,6 +10,18 @@
 			</div>
 		</div>
 		<div class="form-group">
+			<label class="col-sm-2 control-label">Origin City</label>
+			<div class="col-sm-10">
+				<p class="form-control-static"><?php echo $help->Wish_Origin_City; ?></p>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Origin Country</label>
+			<div class="col-sm-10">
+				<p class="form-control-static"><?php echo $help->Wish_Origin_Country_Name; ?></p>
+			</div>
+		</div>
+		<div class="form-group">
 			<label class="col-sm-2 control-label">Destination City</label>
 			<div class="col-sm-10">
 				<p class="form-control-static"><?php echo $help->Wish_Destination_City; ?></p>

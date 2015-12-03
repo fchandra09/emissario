@@ -37,15 +37,18 @@ class HelpModel extends Model
 	{
 		$sql = "SELECT Help.*,
 					Wish.Description AS Wish_Description,
+					Wish.Origin_City AS Wish_Origin_City,
 					Wish.Destination_City AS Wish_Destination_City,
 					Wish.Status AS Wish_Status,
-					Country.Country_Name AS Wish_Destination_Country_Name,
+					Orig_Country.Country_Name AS Wish_Origin_Country_Name,
+					Dest_Country.Country_Name AS Wish_Destination_Country_Name,
 					Owner.First_Name AS Wish_Owner_First_Name,
 					Owner.Last_Name AS Wish_Owner_Last_Name
 				FROM Help
 				INNER JOIN Wish ON Wish.ID = Help.Wish_ID
 				INNER JOIN User Owner ON Owner.ID = Wish.User_ID
-				LEFT JOIN Country ON Country.Country_Code = Wish.Destination_Country
+				LEFT JOIN Country Orig_Country ON Orig_Country.Country_Code = Wish.Origin_Country
+				LEFT JOIN Country Dest_Country ON Dest_Country.Country_Code = Wish.Destination_Country
 				WHERE Help.User_ID = :user_id
 					AND (Wish.Status = 'Open'
 						OR (Help.Requested = 1
@@ -79,8 +82,10 @@ class HelpModel extends Model
 		if (trim($search) != "")
 		{
 			$sql .= " AND (Wish.Description LIKE :search
+						OR Wish.Origin_City LIKE :search
+						OR Orig_Country.Country_Name LIKE :search
 						OR Wish.Destination_City LIKE :search
-						OR Country.Country_Name LIKE :search
+						OR Dest_Country.Country_Name LIKE :search
 						OR CONCAT(Owner.First_Name, ' ', Owner.Last_Name) LIKE :search)";
 		}
 
@@ -102,11 +107,13 @@ class HelpModel extends Model
 	{
 		$sql = "SELECT Help.*,
 					Wish.Description AS Wish_Description,
+					Wish.Origin_City AS Wish_Origin_City,
 					Wish.Destination_City AS Wish_Destination_City,
 					Wish.Status AS Wish_Status,
 					Wish.Weight AS Wish_Weight,
 					Wish.Compensation AS Wish_Compensation,
-					Country.Country_Name AS Wish_Destination_Country_Name,
+					Orig_Country.Country_Name AS Wish_Origin_Country_Name,
+					Dest_Country.Country_Name AS Wish_Destination_Country_Name,
 					Owner.ID AS Wish_Owner_ID,
 					Owner.First_Name AS Wish_Owner_First_Name,
 					Owner.Last_Name AS Wish_Owner_Last_Name,
@@ -115,7 +122,8 @@ class HelpModel extends Model
 				FROM Help
 				INNER JOIN Wish ON Wish.ID = Help.Wish_ID
 				INNER JOIN User Owner ON Owner.ID = Wish.User_ID
-				LEFT JOIN Country ON Country.Country_Code = Wish.Destination_Country
+				LEFT JOIN Country Orig_Country ON Orig_Country.Country_Code = Wish.Origin_Country
+				LEFT JOIN Country Dest_Country ON Dest_Country.Country_Code = Wish.Destination_Country
 				LEFT JOIN Review ON Review.Help_ID = Help.ID
 				WHERE Help.ID = :help_id";
 
@@ -156,21 +164,15 @@ class HelpModel extends Model
 												WHERE T.User_ID = User.ID
 													AND T.Travel_Date > DATE(NOW())
 												ORDER BY CASE
-														WHEN T.Destination_Country = Wish.Destination_Country AND T.Origin_Country = Me.Country THEN 1
-														WHEN T.Origin_Country = Wish.Destination_Country AND T.Destination_Country = Me.Country THEN 1
+														WHEN T.Destination_Country = Wish.Destination_Country AND T.Origin_Country = Wish.Origin_Country THEN 1
 														WHEN T.Destination_Country = Wish.Destination_Country THEN 2
-														WHEN T.Origin_Country = Wish.Destination_Country THEN 2
-														WHEN T.Destination_Country = Me.Country THEN 3
-														WHEN T.Origin_Country = Me.Country THEN 3
+														WHEN T.Origin_Country = Wish.Origin_Country THEN 3
 														ELSE 4
 													END,
 													CASE
-														WHEN LOWER(T.Destination_City) = LOWER(Wish.Destination_City) AND LOWER(T.Origin_City) = LOWER(Me.City) THEN 1
-														WHEN LOWER(T.Origin_City) = LOWER(Wish.Destination_City) AND LOWER(T.Destination_City) = LOWER(Me.City) THEN 1
+														WHEN LOWER(T.Destination_City) = LOWER(Wish.Destination_City) AND LOWER(T.Origin_City) = LOWER(Wish.Origin_City) THEN 1
 														WHEN LOWER(T.Destination_City) = LOWER(Wish.Destination_City) THEN 2
-														WHEN LOWER(T.Origin_City) = LOWER(Wish.Destination_City) THEN 2
-														WHEN LOWER(T.Destination_City) = LOWER(Me.City) THEN 3
-														WHEN LOWER(T.Origin_City) = LOWER(Me.City) THEN 3
+														WHEN LOWER(T.Origin_City) = LOWER(Wish.Origin_City) THEN 3
 														ELSE 4
 													END,
 													Travel_Date
@@ -198,21 +200,15 @@ class HelpModel extends Model
 						AND Help.Wish_ID = Wish.ID
 				)
 				ORDER BY CASE
-						WHEN Travel.Destination_Country = Wish.Destination_Country AND Travel.Origin_Country = Me.Country THEN 1
-						WHEN Travel.Origin_Country = Wish.Destination_Country AND Travel.Destination_Country = Me.Country THEN 1
+						WHEN Travel.Destination_Country = Wish.Destination_Country AND Travel.Origin_Country = Wish.Origin_Country THEN 1
 						WHEN Travel.Destination_Country = Wish.Destination_Country THEN 2
-						WHEN Travel.Origin_Country = Wish.Destination_Country THEN 2
-						WHEN Travel.Destination_Country = Me.Country THEN 3
-						WHEN Travel.Origin_Country = Me.Country THEN 3
+						WHEN Travel.Origin_Country = Wish.Origin_Country THEN 3
 						ELSE 4
 					END,
 					CASE
-						WHEN LOWER(Travel.Destination_City) = LOWER(Wish.Destination_City) AND LOWER(Travel.Origin_City) = LOWER(Me.City) THEN 1
-						WHEN LOWER(Travel.Origin_City) = LOWER(Wish.Destination_City) AND LOWER(Travel.Destination_City) = LOWER(Me.City) THEN 1
+						WHEN LOWER(Travel.Destination_City) = LOWER(Wish.Destination_City) AND LOWER(Travel.Origin_City) = LOWER(Wish.Origin_City) THEN 1
 						WHEN LOWER(Travel.Destination_City) = LOWER(Wish.Destination_City) THEN 2
-						WHEN LOWER(Travel.Origin_City) = LOWER(Wish.Destination_City) THEN 2
-						WHEN LOWER(Travel.Destination_City) = LOWER(Me.City) THEN 3
-						WHEN LOWER(Travel.Origin_City) = LOWER(Me.City) THEN 3
+						WHEN LOWER(Travel.Destination_City) = LOWER(Wish.Origin_City) THEN 3
 						ELSE 4
 					END,
 					Friend_Status,

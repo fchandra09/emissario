@@ -44,11 +44,11 @@ WHERE NOT EXISTS (
 			AND F.User_ID1 = U2.ID)
 );
 
-INSERT INTO Wish (User_ID, Description, Weight, Destination_City, Destination_Country, Compensation, Created_On, Modified_On)
-SELECT User.ID, Description, Weight, Destination_City, Destination_Country, Compensation, NOW() AS Created_On, NOW() AS Modified_On
+INSERT INTO Wish (User_ID, Description, Weight, Origin_City, Origin_Country, Destination_City, Destination_Country, Compensation, Created_On, Modified_On)
+SELECT User.ID, Description, Weight, Origin_City, Origin_Country, Destination_City, Destination_Country, Compensation, NOW() AS Created_On, NOW() AS Modified_On
 FROM (
-	SELECT 'fchandr2@illinois.edu' AS Email, 'Help me buy 5 packets of authentic green tea pocky.' AS Description, '500 gr' AS Weight, 'Kyoto' AS Destination_City, 'JP' AS Destination_Country, 'I will treat you to lunch' AS Compensation
-    UNION SELECT 'fchandr2@illinois.edu', 'Deliver a book to my sister', '2 lbs', 'Singapore', 'SG', NULL
+	SELECT 'fchandr2@illinois.edu' AS Email, 'Help me buy 5 packets of authentic green tea pocky.' AS Description, '500 gr' AS Weight, 'Kyoto' AS Origin_City, 'JP' AS origin_Country, 'Urbana' AS Destination_City, 'US' AS Destination_Country, 'I will treat you to lunch' AS Compensation
+    UNION SELECT 'fchandr2@illinois.edu', 'Deliver a book to my sister', '2 lbs', 'Urbana', 'US', 'Singapore', 'SG', NULL
 ) Tmp
 INNER JOIN User ON User.Email = Tmp.Email
 WHERE NOT EXISTS (

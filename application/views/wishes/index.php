@@ -29,6 +29,8 @@
 			<thead>
 				<tr>
 					<th>Description</th>
+					<th>Origin City</th>
+					<th>Origin Country</th>
 					<th>Destination City</th>
 					<th>Destination Country</th>
 					<th>Status</th>
@@ -42,6 +44,8 @@
 								<?php echo $wish->Description ?>
 							</a>
 						</td>
+						<td><?php echo $wish->Origin_City ?></td>
+						<td><?php echo $wish->Origin_Country_Name ?></td>
 						<td><?php echo $wish->Destination_City ?></td>
 						<td><?php echo $wish->Destination_Country_Name ?></td>
 						<td><?php echo $wish->Status ?></td>

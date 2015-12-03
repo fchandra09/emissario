@@ -25,6 +25,23 @@ else
 			</div>
 		</div>
 		<div class="form-group">
+			<label for="originCity" class="col-sm-2 control-label">Origin City</label>
+			<div class="col-sm-10">
+				<input type="text" id="originCity" name="originCity" value="<?php echo $wish->Origin_City ?>" class="form-control" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="originCountry" class="col-sm-2 control-label">Origin Country</label>
+			<div class="col-sm-10">
+				<select id="originCountry" name="originCountry" class="form-control">
+					<option value="">- Origin Country -</option>
+					<?php foreach ($countries as $country) { ?>
+						<option value="<?php echo $country->Country_Code; ?>" <?php if (strcasecmp($wish->Origin_Country, $country->Country_Code) == 0) { ?>selected<?php } ?>><?php echo $country->Country_Name; ?></option>
+					<?php } ?>
+				</select>
+			</div>
+		</div>
+		<div class="form-group">
 			<label for="destinationCity" class="col-sm-2 control-label">Destination City</label>
 			<div class="col-sm-10">
 				<input type="text" id="destinationCity" name="destinationCity" value="<?php echo $wish->Destination_City ?>" class="form-control" />

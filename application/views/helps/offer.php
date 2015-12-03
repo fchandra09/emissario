@@ -14,6 +14,7 @@
 							<th width="1%">&nbsp;</th>
 							<th width="1%">&nbsp;</th>
 							<th>Description</th>
+							<th>Origin</th>
 							<th>Destination</th>
 							<th width="1%">&nbsp;</th>
 							<th>Owner</th>
@@ -35,6 +36,14 @@
 									</a>
 								</td>
 								<td class="truncate"><?php echo $wish->Description; ?></td>
+								<td>
+									<?php $origin = $wish->Origin_City;
+									if ($wish->Origin_Country_Name != "" && $origin != "") {
+										$origin .= ", ";
+									}
+									$origin .= $wish->Origin_Country_Name;
+									echo $origin; ?>
+								</td>
 								<td>
 									<?php $destination = $wish->Destination_City;
 									if ($wish->Destination_Country_Name != "" && $destination != "") {

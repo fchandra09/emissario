@@ -38,8 +38,8 @@
 			<thead>
 				<tr>
 					<th>Description</th>
-					<th>Destination City</th>
-					<th>Destination Country</th>
+					<th>Origin</th>
+					<th>Destination</th>
 					<th>Owner</th>
 					<th>Wish Status</th>
 					<th>
@@ -58,8 +58,22 @@
 								<?php echo $help->Wish_Description ?>
 							</a>
 						</td>
-						<td><?php echo $help->Wish_Destination_City; ?></td>
-						<td><?php echo $help->Wish_Destination_Country_Name; ?></td>
+						<td>
+							<?php $origin = $help->Wish_Origin_City;
+							if ($help->Wish_Origin_Country_Name != "" && $origin != "") {
+								$origin .= ", ";
+							}
+							$origin .= $help->Wish_Origin_Country_Name;
+							echo $origin; ?>
+						</td>
+						<td>
+							<?php $destination = $help->Wish_Destination_City;
+							if ($help->Wish_Destination_Country_Name != "" && $destination != "") {
+								$destination .= ", ";
+							}
+							$destination .= $help->Wish_Destination_Country_Name;
+							echo $destination; ?>
+						</td>
 						<td><?php echo $help->Wish_Owner_First_Name . " " . $help->Wish_Owner_Last_Name; ?></td>
 						<td><?php echo $help->Wish_Status; ?></td>
 						<td>
