@@ -14,11 +14,14 @@
 					</span>
 				</div>
 			</div>
+			<div class="col-sm-5" style="margin-left: 25px; padding-left:40px; height:34px; border-left:2px solid #ddd;">
+				<a id="friendRecommendation" style="padding-top:7px; display:inline-block; cursor:pointer;">Friends You Might Know</a>
+			</div>
 		</div>
 	</div>
 
 	<h3 class="page-header" style="margin-bottom: 10px;">Search Results</h3>
-	<div class="table-responsive">
+	<div class="table-responsive" style="overflow-y:auto; max-height:500px;">
 		<table id="searchResults" class="table table-striped">
 			<thead>
 				<tr>
@@ -40,7 +43,7 @@
 		<input type="hidden" id="userID" name="userID" value="<?php echo $userID ?>" />
 		<input type="hidden" id="friendIDs" name="friendIDs" />
 
-		<div class="table-responsive" style="margin-bottom: 30px;">
+		<div class="table-responsive" style="margin-bottom: 30px; overflow-y:auto; max-height:500px;">
 			<table id="selectedUsers" class="table table-striped">
 				<thead>
 					<tr>
@@ -72,6 +75,7 @@
 			window.location.href = '<?php echo URL_WITH_INDEX_FILE; ?>friends';
 		});
 
+		$('#friendRecommendation').click(getFriendsYouMightKnow);
 		$('#searchIcon').click(searchPotentialFriends);
 
 		jQuery('#search').keyup(function(e){
@@ -124,38 +128,53 @@
 			},
 			dataType: 'text',
 			success: function(result) {
-				potentialFriends = $.parseJSON(result);
-
-				$('#searchResults').find('tbody').empty();
-
-				for (var i = 0; i < potentialFriends.length; i++) {
-					tr = $('<tr></tr>');
-
-					spanAdd = $('<span title="Add"><i class="glyphicon glyphicon-plus"></i></span>');
-					spanAdd.click(addSelected);
-
-					spanConnection = $('<span title="View Connection"><i class="glyphicon glyphicon-user"></i></span>');
-					spanConnection.click(viewConnection);
-
-					friendIDField = $('<input type="hidden" class="potentialFriendID" />')
-					friendIDField.val(potentialFriends[i].ID);
-
-					tdAction = $('<td width="1%" class="column-action"></td>');
-					tdAction.append(spanAdd);
-					tdAction.append(spanConnection);
-					tdAction.append(friendIDField);
-
-					tr.append(tdAction);
-					tr.append('<td>' + potentialFriends[i].First_Name + '</td>');
-					tr.append('<td>' + potentialFriends[i].Last_Name + '</td>');
-					tr.append('<td>' + getValueForDisplay(potentialFriends[i].City) + '</td>');
-					tr.append('<td>' + getValueForDisplay(potentialFriends[i].State_Name) + '</td>');
-					tr.append('<td>' + getValueForDisplay(potentialFriends[i].Country_Name) + '</td>');
-
-					$('#searchResults').find('tbody').append(tr);
-				}
+				repopulateSearchResults(result);
 			}
 		});
+	}
+
+	getFriendsYouMightKnow = function() {
+		$.ajax({
+			url: '<?php echo URL_WITH_INDEX_FILE; ?>friends/getFriendsYouMightKnow',
+			type: 'post',
+			dataType: 'text',
+			success: function(result) {
+				repopulateSearchResults(result);
+			}
+		});
+	}
+
+	repopulateSearchResults = function(json) {
+		potentialFriends = $.parseJSON(json);
+
+		$('#searchResults').find('tbody').empty();
+
+		for (var i = 0; i < potentialFriends.length; i++) {
+			tr = $('<tr></tr>');
+
+			spanAdd = $('<span title="Add"><i class="glyphicon glyphicon-plus"></i></span>');
+			spanAdd.click(addSelected);
+
+			spanConnection = $('<span title="View Connection"><i class="glyphicon glyphicon-user"></i></span>');
+			spanConnection.click(viewConnection);
+
+			friendIDField = $('<input type="hidden" class="potentialFriendID" />')
+			friendIDField.val(potentialFriends[i].ID);
+
+			tdAction = $('<td width="1%" class="column-action"></td>');
+			tdAction.append(spanAdd);
+			tdAction.append(spanConnection);
+			tdAction.append(friendIDField);
+
+			tr.append(tdAction);
+			tr.append('<td>' + potentialFriends[i].First_Name + '</td>');
+			tr.append('<td>' + potentialFriends[i].Last_Name + '</td>');
+			tr.append('<td>' + getValueForDisplay(potentialFriends[i].City) + '</td>');
+			tr.append('<td>' + getValueForDisplay(potentialFriends[i].State_Name) + '</td>');
+			tr.append('<td>' + getValueForDisplay(potentialFriends[i].Country_Name) + '</td>');
+
+			$('#searchResults').find('tbody').append(tr);
+		}
 	}
 
 	getValueForDisplay = function(value) {

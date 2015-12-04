@@ -98,7 +98,8 @@ class FriendModel extends Model
 		return $GLOBALS["beans"]->queryHelper->getSingleRowObject($this->db, $sql, $parameters);
 	}
 
-	public function deleteFriend($friendID, $userID) {
+	public function deleteFriend($friendID, $userID)
+	{
 		$sql = "DELETE
 				FROM Friend
 				WHERE (Friend.User_ID1 = :friend_id
@@ -150,7 +151,8 @@ class FriendModel extends Model
 		return $query->fetchAll();
 	}
 
-	public function insertFriend($friendID) {
+	public function insertFriend($friendID)
+	{
 		$sql = "INSERT INTO Friend (User_ID1, User_ID2, Pending, Created_On, Modified_On)
 				VALUES (:user_id, :friend_id, 1, NOW(), NOW())";
 
@@ -162,7 +164,8 @@ class FriendModel extends Model
 		return $GLOBALS["beans"]->queryHelper->executeWriteQuery($this->db, $sql, $parameters);
 	}
 
-	public function acceptFriend($friendID, $userID) {
+	public function acceptFriend($friendID, $userID)
+	{
 		$sql = "UPDATE Friend
 				SET Pending = 0,
 					Modified_On = NOW()
@@ -175,6 +178,26 @@ class FriendModel extends Model
 		);
 
 		$GLOBALS["beans"]->queryHelper->executeWriteQuery($this->db, $sql, $parameters);
+	}
+
+	public function getPendingFriendIDs($userID)
+	{
+		$sql = "SELECT User_ID2 AS Friend_ID
+				FROM Friend
+				WHERE User_ID1 = :user_id
+					AND Pending = 1
+				UNION
+				SELECT User_ID1 AS Friend_ID
+				FROM Friend
+				WHERE User_ID2 = :user_id
+					AND Pending = 1";
+
+		$parameters = array(":user_id" => $userID);
+
+		$query = $this->db->prepare($sql);
+		$query->execute($parameters);
+
+		return $query->fetchAll();
 	}
 
 }

@@ -109,4 +109,12 @@ class Friends
 		require APP . 'views/friends/connection.php';
 	}
 
+	public function getFriendsYouMightKnow()
+	{
+		$userID = $GLOBALS["beans"]->siteHelper->getSession("userID");
+		$potentialFriends = $GLOBALS["beans"]->friendService->getFriendsYouMightKnow($userID);
+
+		echo json_encode($potentialFriends);
+	}
+
 }

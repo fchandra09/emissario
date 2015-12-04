@@ -35,7 +35,8 @@ class FriendService extends Service
 		$this->model->acceptFriend($friendID, $userID);
 	}
 
-	public function &getShortestPath($userID, $targetUserID) {
+	public function &getShortestPath($userID, $targetUserID)
+	{
 		$maxDegree = 5;
 		$targetNodes = array();
 		$root = new Node($userID, "Me");
@@ -141,6 +142,155 @@ class FriendService extends Service
 		$result->Max_Branch = count($targetNodes);
 
 		return $result;
+	}
+
+	public function getFriendsYouMightKnow($userID)
+	{
+		$mapResult = $this->mapFriendRecommendations($userID, true);
+		$recommendations = $this->reduceFriendRecommendations($mapResult->Recommendation_Map, $userID);
+
+		/* Remove pending friends from recommendations */
+		$pendingFriends = $this->model->getPendingFriendIDs($userID);
+		foreach ($pendingFriends as $pendingFriend)
+		{
+			if (array_key_exists($pendingFriend->Friend_ID, $recommendations))
+			{
+				unset($recommendations[$pendingFriend->Friend_ID]);
+			}
+		}
+
+		$selectedRecords = array();
+		foreach ($recommendations as $recommendedFriendID => $mutualFriendCount)
+		{
+			$selectedRecords[] = $mapResult->Query_Records[$recommendedFriendID];
+		}
+
+		return $selectedRecords;
+	}
+
+	public function &mapFriendRecommendations($userID, $recursive = false)
+	{
+		$recommendationMap = array();
+		$queryRecords = array();
+		$friends = $this->getFriends($userID, "friends");
+		$friendCount = count($friends);
+
+		for ($i = 0; $i < $friendCount; $i++)
+		{
+			$queryRecords[$friends[$i]->ID] = $friends[$i];
+
+			$map = new stdClass();
+			$map->User_ID = $userID;
+			$map->Recommended_Friend_ID = $friends[$i]->ID;
+			$map->Mutual_Friend_ID = -1;
+			$recommendationMap[] = $map;
+
+			$map = new stdClass();
+			$map->User_ID = $friends[$i]->ID;
+			$map->Recommended_Friend_ID = $userID;
+			$map->Mutual_Friend_ID = -1;
+			$recommendationMap[] = $map;
+
+			for ($j = $i + 1; $j < $friendCount; $j++)
+			{
+				$map = new stdClass();
+				$map->User_ID = $friends[$i]->ID;
+				$map->Recommended_Friend_ID = $friends[$j]->ID;
+				$map->Mutual_Friend_ID = $userID;
+				$recommendationMap[] = $map;
+
+				$map = new stdClass();
+				$map->User_ID = $friends[$j]->ID;
+				$map->Recommended_Friend_ID = $friends[$i]->ID;
+				$map->Mutual_Friend_ID = $userID;
+				$recommendationMap[] = $map;
+			}
+
+			if ($recursive)
+			{
+				$recursiveResult = $this->mapFriendRecommendations($friends[$i]->ID, false);
+				$recommendationMap = array_merge($recommendationMap, $recursiveResult->Recommendation_Map);
+				$queryRecords = $queryRecords + $recursiveResult->Query_Records;
+			}
+		}
+
+		$result = new stdClass();
+		$result->Recommendation_Map = $recommendationMap;
+		$result->Query_Records = $queryRecords;
+
+		return $result;
+	}
+
+	public function reduceFriendRecommendations(&$recommendationMap, $userID)
+	{
+		/* Associative array of associative array. [User ID: [Recommended user ID: mutual count]]
+		 * For example: ["1": ["3": 3, "5": 2]
+		 * 				 "2": ["7": 4, "5": 1]]*/
+		$reducedRecommendations = array();
+
+		/* Associative array of array. [User ID: [Do not recommend user ID]]
+		 * For example: ["1": ["4", "7", "10"],
+		 * 				 "2": ["3", "4"]] */
+		$doNotRecommend = array();
+
+		foreach ($recommendationMap as $map)
+		{
+			$personID = $map->User_ID;
+			$recommendedFriendID = $map->Recommended_Friend_ID;
+			$mutualFriendID = $map->Mutual_Friend_ID;
+
+			unset($recommendationArray);
+			unset($doNotRecommendArray);
+
+			if (array_key_exists($personID, $reducedRecommendations))
+			{
+				$recommendationArray = &$reducedRecommendations[$personID];
+			}
+			else {
+				$recommendationArray = array();
+				$reducedRecommendations[$personID] = &$recommendationArray;
+			}
+
+			if (array_key_exists($personID, $doNotRecommend))
+			{
+				$doNotRecommendArray = &$doNotRecommend[$personID];
+			}
+			else {
+				$doNotRecommendArray = array();
+				$doNotRecommend[$personID] = &$doNotRecommendArray;
+			}
+
+			if (($mutualFriendID != -1) && (!in_array($recommendedFriendID, $doNotRecommendArray)))
+			{
+				if (array_key_exists($recommendedFriendID, $recommendationArray))
+				{
+					$recommendationArray[$recommendedFriendID]++;
+				}
+				else
+				{
+					$recommendationArray[$recommendedFriendID] = 1;
+				}
+			}
+
+			/* Already friends so do not recommend anymore */
+			elseif ($mutualFriendID == -1)
+			{
+				if (!in_array($recommendedFriendID, $doNotRecommendArray))
+				{
+					$doNotRecommendArray[] = $recommendedFriendID;
+				}
+
+				if (array_key_exists($recommendedFriendID, $recommendationArray))
+				{
+					unset($recommendationArray[$recommendedFriendID]);
+				}
+			}
+		}
+
+		$recommendations = $reducedRecommendations[$userID];
+		arsort($recommendations);
+
+		return $recommendations;
 	}
 
 }
