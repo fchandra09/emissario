@@ -23,15 +23,15 @@ Our team developed Emissario with the circumstances above in mind. We wanted to 
 **Front-end:** HTML, Javascript, CSS  
 **Web Server:** Apache  
 **Production Hosting:** cPanel  
-**Version Control:** [GitHub] (https://github.com/fchandra09/emissario)  
+**Version Control:** [GitHub](https://github.com/fchandra09/emissario)  
   
 **Frameworks and Libraries:**  
-* [TINY] (https://github.com/panique/tiny)  
-*	[Bootstrap] (http://getbootstrap.com/)  
-*	[jQuery] (https://jquery.com/)  
-*	[jQuery Validation Plugin] (http://jqueryvalidation.org/)  
-*	[bootstrap-datepicker] (https://github.com/eternicode/bootstrap-datepicker)  
-*	[Cytoscape.js] (http://js.cytoscape.org/)  
-*	[password_compat] (https://github.com/ircmaxell/password_compat)  
+* [TINY](https://github.com/panique/tiny)  
+*	[Bootstrap](http://getbootstrap.com/)  
+*	[jQuery](https://jquery.com/)  
+*	[jQuery Validation Plugin](http://jqueryvalidation.org/)  
+*	[bootstrap-datepicker](https://github.com/eternicode/bootstrap-datepicker)  
+*	[Cytoscape.js](http://js.cytoscape.org/)  
+*	[password_compat](https://github.com/ircmaxell/password_compat)  
   
-Emissario logo and favicon were designed by [Anastasia Anita] (https://www.behance.net/AnastasiaAnita)  
+Emissario logo and favicon were designed by [Anastasia Anita](https://www.behance.net/AnastasiaAnita)  
