@@ -17,6 +17,9 @@ The problem is, currently there is no easy way to figure out who is going to be 
   
 Our team developed Emissario with the circumstances above in mind. We wanted to create a bridge where people can post their requests, find out who might be able to help, and connect to these travelers easily. This way we can help people to cut down the time and effort spent on locating someone who may be able to help with their needs.  
 
+### Project Demo
+View project demo video at [YouTube](https://www.youtube.com/watch?v=cnvCZY9rhB0).
+
 ### Development Specification
 **Database:** MySQL  
 **Back-end:** PHP 5.4  
